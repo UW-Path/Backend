@@ -1,2 +1,2 @@
-__all__ = ["UWPathAPI"]
-from UWPathWebsite import *
+__all__ = ["API"]
+from API import *
