@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app.apps.UwpathConfig',
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -54,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'django_projects.urls'
@@ -146,3 +148,11 @@ EMAIL_HOST_USER = os.environ.get('UWPath_Email_Account')
 EMAIL_HOST_PASSWORD = os.environ.get('UWPath_Email_Password')
 EMAIL_USE_TLS = True
 
+
+# CORS Configuration
+
+# Development Configuration - Allow other origins (eg the localhost:8080 frontend) to make api calls over http
+CORS_ORIGIN_ALLOW_ALL = True
+
+# Production Configuration - In production we likely don't want to allow any traffic over http
+# CORS_ORIGIN_ALLOW_ALL = True
