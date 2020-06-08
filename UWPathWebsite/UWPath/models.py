@@ -176,6 +176,7 @@ class Requirements(models.Model):
     plan_type = models.CharField(max_length=255, blank=True, null=True)
     course_codes = models.CharField(max_length=255, blank=True, null=True)
     number_of_courses = models.IntegerField(blank=True, null=True)
+    credits_required = models.DecimalField(max_digits=4, decimal_places=2)
     additional_requirements = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
