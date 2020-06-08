@@ -81,7 +81,7 @@ function checkSchedule(term_index) {
                 if (!(course.endsWith("*") || course.includes(","))) {
                     draggedId = course_li.id;
                     $.ajax({
-                        url: 'http://127.0.0.1:8000/api/meets_prereqs/get/' + course,
+                        url: 'http://0.0.0.0:8000/api/meets_prereqs/get/' + course,
                         type: 'get',
                         data: {
                             list_of_courses_taken: listOfCoursesTaken,
@@ -119,7 +119,7 @@ function addTask() {
     if (/\S/.test(inputTask)) {
         /* Add task to the 'Required' column */
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/course-info/get/' + inputTask,
+            url: 'http://0.0.0.0:8000/api/course-info/get/' + inputTask,
             type: 'get', // This is the default though, you don't actually need to always mention it
             success: function (data) {
                 document.getElementById("required").innerHTML +=
@@ -190,7 +190,7 @@ function getCurrent(term_index) {
 function filter_courses(start, end, code) {
     let course_title = {};
     $.ajax({
-        url: 'http://127.0.0.1:8000/api/course-info/filter',
+        url: 'http://0.0.0.0:8000/api/course-info/filter',
         type: 'get',
         data: {
             start: start,
@@ -337,7 +337,7 @@ function generateCourseHTML(course, term_index, isScrollable = false, element = 
             } );
         }
         $.ajax({
-            url: 'http://127.0.0.1:8000/api/meets_prereqs/get/' + course,
+            url: 'http://0.0.0.0:8000/api/meets_prereqs/get/' + course,
             type: 'get',
             data: {
                 list_of_courses_taken: listOfCoursesTaken,
@@ -366,7 +366,7 @@ function generateCourseHTML(course, term_index, isScrollable = false, element = 
     html += "<h3>" + course + "</h3></div>";
 
     $.ajax({
-        url: 'http://127.0.0.1:8000/api/course-info/get/' + course,
+        url: 'http://0.0.0.0:8000/api/course-info/get/' + course,
         type: 'get',
         async: false,
         success: function (data) {
@@ -459,7 +459,7 @@ function breathCheck() {
     const numTerms = terms.length;
     let taken = getTaken(numTerms);
     $.ajax({
-        url: 'http://127.0.0.1:8000/api/breath_met/',
+        url: 'http://0.0.0.0:8000/api/breath_met/',
         type: 'get',
         data: {
             list_of_courses_taken: taken
