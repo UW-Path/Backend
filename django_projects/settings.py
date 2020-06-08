@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'UWPath.apps.UwpathConfig',
+    'app.apps.UwpathConfig',
     'rest_framework'
 ]
 
@@ -131,7 +131,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    'UWPath/static/',
+    'app/static/',
 ]
 
 # Note for emails to work please set up env variables. Note: You might need to restart your computer

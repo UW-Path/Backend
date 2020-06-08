@@ -1,2 +1,2 @@
 __all__ = ["ValidationCheckAPI"]
-from UWPathAPI import *
+from API import *

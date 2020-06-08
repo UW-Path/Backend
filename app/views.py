@@ -10,7 +10,7 @@ from django_projects import settings
 from .models import UwpathApp, CourseInfo, Prereqs, Antireqs, Requirements, Communications, ContactForm, Breath
 from .serializer import AppSerializer, CourseInfoSerializer, AntireqsSerializer, PrereqsSerializer, \
     RequirementsSerializer, CommunicationsSerializer, BreathSerializer
-from UWPathAPI.ValidationCheckAPI import ValidationCheckAPI
+from API.ValidationCheckAPI import ValidationCheckAPI
 from django.db.models import Q
 
 
