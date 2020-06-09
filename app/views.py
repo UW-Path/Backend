@@ -13,7 +13,7 @@ from .serializer import AppSerializer, CourseInfoSerializer, AntireqsSerializer,
 from API.ValidationCheckAPI import ValidationCheckAPI
 from django.db.models import Q
 
-#Website branch
+#Website branch.
 
 # Create your views here.
 
