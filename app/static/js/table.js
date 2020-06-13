@@ -113,7 +113,8 @@ function checkSchedule(term_index) {
 function addTask() {
     /* Get task text from input */
     const inputTask = document.getElementById("taskText").value.toUpperCase();
-    let id = inputTask + "(" + Math.round(Math.random() * 100) + ")"; //generate random number to prevent unique id
+    let id = inputTask + "(" + Math.round(Math.random() * 100) + ")";
+    //generate random number to prevent unique id
     id = id.replace(" ", "");
     // check if inputTask has whitespace
     if (/\S/.test(inputTask)) {
