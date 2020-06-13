@@ -84,7 +84,8 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '1234',
-        'HOST': 'localhost',
+        'HOST': 'db' if os.getenv("UWPATH_ENVIRONMENT") is not None and
+                        os.getenv("UWPATH_ENVIRONMENT") == "docker" else 'localhost',
         'PORT': '5432',
     }
 }

@@ -13,6 +13,8 @@ services:
       - "8000:8000"
     networks:
       - dataparsing_default
+    environment:
+      - UWPATH_ENVIRONMENT=docker
 networks:
   dataparsing_default:
     external: true
