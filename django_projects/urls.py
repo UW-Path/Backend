@@ -15,27 +15,39 @@ Including another URLconf
 """
 from django.urls import path, re_path
 from django.contrib import admin
-import app.views as uwPath
+
+import app.view as uwPath
+import app.views.course_view as course_view
+import app.views.prerq_view as prereq_view
+import app.views.antireq_view as antireq_view
+import app.views.breath_view as breath_view
+import app.views.requirement_view as requirement_view
+import app.views.validation_view as validation_view
+import app.views.communication_view as communication_view
+import app.views.validation_view as validation_view
+
 
 urlpatterns = [
     path('', uwPath.index, name='index'),
     path(r'admin/', admin.site.urls),
     path(r'api/', uwPath.AllApp.as_view()),
-    path(r'api/course-info/get/<str:pk>', uwPath.Course_Info_API.as_view()),
-    path(r'api/course-info/filter', uwPath.Course_Info_API.filter),
-    path(r'api/course-info/', uwPath.Course_Info_List.as_view()),
-    path(r'api/prereqs/', uwPath.Prereqs_List.as_view()),
-    path(r'api/prereqs/get/<str:pk>', uwPath.Prereqs_API.as_view()),
-    path(r'api/antireqs/', uwPath.Antireqs_List.as_view()),
-    path(r'api/antireqs/get/<str:pk>', uwPath.Antireqs_API.as_view()),
-    path(r'api/breath/', uwPath.Breath_List.as_view()),
-    path(r'api/breath/get/<str:pk>', uwPath.Breath_API.as_view()),
-    path(r'api/breath_met/', uwPath.BreathAPI.as_view()),
-    path(r'api/requirements/', uwPath.Requirements_List.as_view()),
-    path(r'api/requirements/get/<str:pk>', uwPath.Requirements_API.as_view()),
-    path(r'api/communications/', uwPath.Communications_List.as_view()),
-    path(r'api/communications/get/<int:pk>', uwPath.Communications_API.as_view()),
-    path(r'api/meets_prereqs/get/<str:pk>', uwPath.UWPath_API.as_view()),
+    path(r'api/course-info/get', course_view.Course_Info_API.as_view()),
+    path(r'api/course-info/filter', course_view.Course_Info_API.filter),
+    path(r'api/course-info/', course_view.Course_Info_List.as_view()),
+    path(r'api/prereqs/', prereq_view.Prereqs_List.as_view()),
+    path(r'api/prereqs/get', prereq_view.Prereqs_API.as_view()),
+    path(r'api/antireqs/', antireq_view.Antireqs_List.as_view()),
+    path(r'api/antireqs/get', antireq_view.Antireqs_API.as_view()),
+    path(r'api/breath/', breath_view.Breath_List.as_view()),
+    path(r'api/breath/get', breath_view.Breath_API.as_view()),
+    path(r'api/breath_met/', breath_view.BreathAPI.as_view()),
+    path(r'api/requirements/', requirement_view.Requirements_List.as_view()),
+    path(r'api/requirements/get', requirement_view.Requirements_API.as_view()),
+    path(r'api/requirements/requirements', requirement_view.Requirements_API.requirements),
+    path(r'api/meets_prereqs/get', validation_view.UWPath_API.as_view()),
+    path(r'api/communications/', communication_view.Communications_List.as_view()),
+    path(r'api/communications/get', communication_view.Communications_API.as_view()),
+    path(r'api/meets_prereqs/get', validation_view.UWPath_API.as_view()),
 
     #a little bit hardcoded below
     path(r'major/<str:major>/<str:majorExtended>/', uwPath.requirements, name='requirements'),
