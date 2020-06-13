@@ -11,10 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 
-"""
-Admin username and password: 1234
-"""
-
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -30,7 +26,7 @@ SECRET_KEY = '7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0", 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -43,10 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app.apps.UwpathConfig',
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,12 +80,13 @@ WSGI_APPLICATION = 'django_projects.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': '1234',
-        'HOST': 'localhost',
-        'PORT': '8888',
+        'HOST': 'db' if os.getenv("UWPATH_ENVIRONMENT") is not None and
+                        os.getenv("UWPATH_ENVIRONMENT") == "docker" else 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -146,3 +145,10 @@ EMAIL_HOST_USER = os.environ.get('UWPath_Email_Account')
 EMAIL_HOST_PASSWORD = os.environ.get('UWPath_Email_Password')
 EMAIL_USE_TLS = True
 
+CORS_ORIGIN_ALLOW_ALL=True
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://0.0.0.0:8000',
+]
