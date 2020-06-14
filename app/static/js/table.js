@@ -81,11 +81,12 @@ function checkSchedule(term_index) {
                 if (!(course.endsWith("*") || course.includes(","))) {
                     draggedId = course_li.id;
                     $.ajax({
-                        url: 'http://0.0.0.0:8000/api/meets_prereqs/get/' + course,
+                        url: 'http://0.0.0.0:8000/api/meets_prereqs/get',
                         type: 'get',
                         data: {
                             list_of_courses_taken: listOfCoursesTaken,
-                            current_term_courses: currentTermCoursesText
+                            current_term_courses: currentTermCoursesText,
+                            pk: course
                         },
                         async: false,
                         success: function (data) {
@@ -120,7 +121,10 @@ function addTask() {
     if (/\S/.test(inputTask)) {
         /* Add task to the 'Required' column */
         $.ajax({
-            url: 'http://0.0.0.0:8000/api/course-info/get/' + inputTask,
+            url: 'http://0.0.0.0:8000/api/course-info/get',
+            data: {
+                pk: inputTask
+            },
             type: 'get', // This is the default though, you don't actually need to always mention it
             success: function (data) {
                 document.getElementById("required").innerHTML +=
@@ -338,11 +342,12 @@ function generateCourseHTML(course, term_index, isScrollable = false, element = 
             } );
         }
         $.ajax({
-            url: 'http://0.0.0.0:8000/api/meets_prereqs/get/' + course,
+            url: 'http://0.0.0.0:8000/api/meets_prereqs/get',
             type: 'get',
             data: {
                 list_of_courses_taken: listOfCoursesTaken,
-                current_term_courses: currentTermCoursesText
+                current_term_courses: currentTermCoursesText,
+                pk: course
             },
             async: false,
             success: function (data) {
@@ -367,8 +372,11 @@ function generateCourseHTML(course, term_index, isScrollable = false, element = 
     html += "<h3>" + course + "</h3></div>";
 
     $.ajax({
-        url: 'http://0.0.0.0:8000/api/course-info/get/' + course,
+        url: 'http://0.0.0.0:8000/api/course-info/get',
         type: 'get',
+        data: {
+            pk: course
+        },
         async: false,
         success: function (data) {
             let id = data.course_id;
