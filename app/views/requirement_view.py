@@ -49,7 +49,7 @@ class Requirements_API(APIView):
             # so we don't exclude courses from requirement
             table2_course_codes = [r["course_codes"] for r in table2 if ("Table II" in r["additional_requirements"])]
 
-            option_list = Requirements_List().get_unique_major()
+            option_list = Requirements_List().get_unique_major_website()
             # Prevent duplicate courses in table II and major
             requirements = Requirements_List().get_major_requirement(major).exclude(course_codes__in=table2_course_codes)
 
@@ -86,7 +86,7 @@ class Requirements_API(APIView):
             option_list = option_list.order_by('plan_type', 'program_name')
 
             # filter minor returned
-            minor_list = Requirements_List().get_unique_major().filter(plan_type="Minor")
+            minor_list = Requirements_List().get_unique_major_website().filter(plan_type="Minor")
             minor_list = minor_list.order_by('program_name')
 
             # specializations and options
@@ -153,7 +153,12 @@ class Requirements_List(APIView):
         serializer = RequirementsSerializer(list, many=True)
         return Response(serializer.data)
 
+    @api_view(('GET',))
     def get_unique_major(self, format=None):
+        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name').filter(plan_type="Major").order_by('program_name').distinct()
+        return JsonResponse({'Major': list(querySet)})
+
+    def get_unique_major_website(self, format=None):
         querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name').order_by('program_name').distinct()
         return querySet
 

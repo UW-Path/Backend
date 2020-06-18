@@ -44,6 +44,7 @@ urlpatterns = [
     path(r'api/requirements/', requirement_view.Requirements_List.as_view()),
     path(r'api/requirements/get', requirement_view.Requirements_API.as_view()),
     path(r'api/requirements/requirements', requirement_view.Requirements_API.requirements),
+    path(r'api/requirements/unique_major', requirement_view.Requirements_List.get_unique_major),
     path(r'api/meets_prereqs/get', validation_view.UWPath_API.as_view()),
     path(r'api/communications/', communication_view.Communications_List.as_view()),
     path(r'api/communications/get', communication_view.Communications_API.as_view()),
