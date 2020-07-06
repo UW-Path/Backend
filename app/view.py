@@ -19,7 +19,7 @@ This section of code is required for django front end to run.
 
 def index(request):
     #Renders Home page with a drop down of major users can select form
-    programs = Requirements_List().get_unique_major()
+    programs = Requirements_List().get_unique_major_website()
     return render(request, 'index.html', {'programs': programs})
 
 
@@ -39,7 +39,7 @@ def requirements(request, major, majorExtended="", option ="", optionExtended ="
     if majorExtended:
         # this is to solve bug where Degree Name includes '/'
         major = major + "/" + majorExtended
-    option_list = Requirements_List().get_unique_major()
+    option_list = Requirements_List().get_unique_major_website()
     #Prevent duplicate courses in table II and major
     requirements = Requirements_List().get_major_requirement(major).exclude(course_codes__in = table2_course_codes)
 
@@ -75,7 +75,7 @@ def requirements(request, major, majorExtended="", option ="", optionExtended ="
     option_list = option_list.order_by('plan_type', 'program_name')
 
     #filter minor returned
-    minor_list = Requirements_List().get_unique_major().filter(plan_type="Minor")
+    minor_list = Requirements_List().get_unique_major_website().filter(plan_type="Minor")
     minor_list = minor_list.order_by('program_name')
 
     # specializations and options

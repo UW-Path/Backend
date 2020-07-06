@@ -178,6 +178,8 @@ class Requirements(models.Model):
     number_of_courses = models.IntegerField(blank=True, null=True)
     credits_required = models.DecimalField(max_digits=4, decimal_places=2)
     additional_requirements = models.CharField(max_length=255, blank=True, null=True)
+    faculty = models.CharField(max_length=50, null=False)
+    link = models.CharField(max_length=255, null=False)
 
     class Meta:
         managed = False
