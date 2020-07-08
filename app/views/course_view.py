@@ -29,8 +29,19 @@ class Course_Info_API(APIView):
         try:
             start = int(request.GET['start'])
             end = int(request.GET['end'])
-            code = request.GET['code']
-            if code.startswith("~") and any(char.isdigit() for char in code):
+            code = request.GET['code'] #CS, MATH ... ETC
+
+            #Generalization
+            if code == "MATH": code = "ACTSC, AMATH, CO, MATH, PMATH, STAT"
+            elif code == "SCIENCE": code = "BIOL, CHEM, EARTH, PHYS, SCI"
+
+            if "LAB" in code:
+                code = code.split(" ")[0]
+                app = CourseInfo.objects.filter(course_abbr=code)
+                app = app.filter(course_code__contains='L')
+                app = app.filter(course_number__gte=start).filter(course_number__lte=end)
+
+            elif code.startswith("~") and any(char.isdigit() for char in code):
                 code = code[1:].split(",")
                 app = CourseInfo.objects.exclude(course_code__in=code)
                 app = app.filter(course_number__gte=start).filter(course_number__lte=end)
