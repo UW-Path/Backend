@@ -7,9 +7,14 @@ from rest_framework.views import APIView
 import json as js
 from collections import namedtuple
 
+from xlwt import Borders
+
 from app.models import Requirements
 from app.serializer import RequirementsSerializer
 from app.views.communication_view import Communications_List
+
+import xlwt
+from django.http import HttpResponse
 
 
 class Requirements_API(APIView):
@@ -146,6 +151,65 @@ class Requirements_API(APIView):
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @api_view(('GET',))
+    def download_course_schedule(request):
+        """
+        return a excel file for users to click download
+        """
+        response = HttpResponse(content_type='application/ms-excel')
+        response['Content-Disposition'] = 'attachment; filename="schedule.xls"'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Course_Schedule')  # this will make a sheet named Users Data
+
+        # Sheet header, first row
+        row_num = 0
+
+        title_font = xlwt.XFStyle()
+        title_font.font.bold = True
+        ws.write(0, 0, "UWPath", title_font)
+        row_num += 2
+
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+        font_style.borders.bottom = Borders.THIN
+
+        #should get from front end
+        columns = ['1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B' ]
+        courses = [['MATH 100','MATH 101','MATH 102', 'MATH 103', 'MATH 104'],
+                   ['MATH 110', 'MATH 111', 'MATH 112', 'MATH 113', 'MATH 114'],
+                   ['MATH 200', 'MATH 201', 'MATH 202', 'MATH 203', 'MATH 204'],
+                   ['MATH 220', 'MATH 221', 'MATH 222', 'MATH 223', 'MATH 224'],
+                   ['MATH 300', 'MATH 301', 'MATH 302', 'MATH 303', 'MATH 304'],
+                   ['AMATH 350', 'PHYCH 101', 'PHIL 102', 'ENGL 103', 'MATH 314'],
+                   ['MATH 400', 'MATH 401', 'MATH 402', 'MATH 403', 'MATH 404'],
+                   ['MATH 440', 'MATH 441', 'AMATH 122', 'CS 103', 'BIO 104']
+                  ]
+
+
+        for i in range(len(columns)):
+            ws.col(i).width = 256 * 15 #10 char width
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)  # at 0 row 0 column
+
+        # Sheet body, remaining rows
+        font_style = xlwt.XFStyle()
+
+        c = len(courses)
+        r = len((courses[0]))
+
+        for i in range(r):
+            row_num += 1
+            for col_num in range(c):
+                ws.write(row_num, col_num, courses[col_num][i], font_style)
+
+        wb.save(response)
+
+        return response
+
+
 
 class Requirements_List(APIView):
     def get(self, request, format=None):
