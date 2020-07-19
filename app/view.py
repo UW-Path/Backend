@@ -10,7 +10,7 @@ from app.models import ContactForm, UwpathApp
 from app.serializer import AppSerializer
 from app.views.communication_view import Communications_List
 from app.views.requirement_view import Requirements_List
-from django_projects import settings
+from uwpath_backend import settings
 from django.db.models import Q
 
 '''
