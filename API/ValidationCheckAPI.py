@@ -13,7 +13,7 @@ from datetime import datetime
 
 from django.core.mail import EmailMessage
 
-from django_projects import settings
+from uwpath_backend import settings
 
 import re
 
