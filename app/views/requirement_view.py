@@ -219,11 +219,11 @@ class Requirements_List(APIView):
 
     @api_view(('GET',))
     def get_unique_major(self, format=None):
-        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name').filter(plan_type="Major").order_by('program_name').distinct()
+        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link').filter(plan_type="Major").order_by('program_name').distinct()
         return JsonResponse({'Major': list(querySet)})
 
     def get_unique_major_website(self, format=None):
-        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name').order_by('program_name').distinct()
+        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link').order_by('program_name').distinct()
         return querySet
 
     def get_major_requirement(self, major):
