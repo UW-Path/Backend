@@ -7,3 +7,4 @@ COPY requirements.txt /code/
 RUN pip install -r requirements.txt
 COPY . /code/
 ENV PATH /code/:$PATH
+EXPOSE 8000
