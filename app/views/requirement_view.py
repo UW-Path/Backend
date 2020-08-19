@@ -4,8 +4,6 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-import json as js
-from collections import namedtuple
 
 from xlwt import Borders
 
@@ -157,8 +155,17 @@ class Requirements_API(APIView):
         """
         return a excel file for users to click download
         """
+        courses = request.GET.getlist("table[]")
+        columns = request.GET.getlist('termList[]')
+
+        if not (courses and columns):
+            Response(status=status.HTTP_400_BAD_REQUEST)
+
+        for i in range(len(courses)):
+            courses[i] = eval(courses[i])
+
         response = HttpResponse(content_type='application/ms-excel')
-        response['Content-Disposition'] = 'attachment; filename="schedule.xls"'
+        response['Content-Disposition'] = 'attachment; filename="uwpath-schedule.xls"'
 
         wb = xlwt.Workbook(encoding='utf-8')
         ws = wb.add_sheet('Course_Schedule')  # this will make a sheet named Users Data
@@ -175,21 +182,8 @@ class Requirements_API(APIView):
         font_style.font.bold = True
         font_style.borders.bottom = Borders.THIN
 
-        #should get from front end
-        columns = ['1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B' ]
-        courses = [['MATH 100','MATH 101','MATH 102', 'MATH 103', 'MATH 104'],
-                   ['MATH 110', 'MATH 111', 'MATH 112', 'MATH 113', 'MATH 114'],
-                   ['MATH 200', 'MATH 201', 'MATH 202', 'MATH 203', 'MATH 204'],
-                   ['MATH 220', 'MATH 221', 'MATH 222', 'MATH 223', 'MATH 224'],
-                   ['MATH 300', 'MATH 301', 'MATH 302', 'MATH 303', 'MATH 304'],
-                   ['AMATH 350', 'PHYCH 101', 'PHIL 102', 'ENGL 103', 'MATH 314'],
-                   ['MATH 400', 'MATH 401', 'MATH 402', 'MATH 403', 'MATH 404'],
-                   ['MATH 440', 'MATH 441', 'AMATH 122', 'CS 103', 'BIO 104']
-                  ]
-
-
         for i in range(len(columns)):
-            ws.col(i).width = 256 * 15 #10 char width
+            ws.col(i).width = 256 * 15  # 10 char width
 
         for col_num in range(len(columns)):
             ws.write(row_num, col_num, columns[col_num], font_style)  # at 0 row 0 column
@@ -198,12 +192,21 @@ class Requirements_API(APIView):
         font_style = xlwt.XFStyle()
 
         c = len(courses)
-        r = len((courses[0]))
+        if c:
+            r = len((courses[0]))
 
-        for i in range(r):
-            row_num += 1
-            for col_num in range(c):
-                ws.write(row_num, col_num, courses[col_num][i], font_style)
+            for i in range(r):
+                row_num += 1
+                for col_num in range(c):
+                    if i < len(courses[col_num]):
+                        if courses[col_num][i][-1] != "WAITING":
+                            output = courses[col_num][i][-1]
+                        else:
+                            output = ""
+                            for j in range(len(courses[col_num][i])-1):
+                                output += courses[col_num][i][j] + "/"
+                            output = output[:-1]
+                        ws.write(row_num, col_num, output, font_style)
 
         wb.save(response)
 
