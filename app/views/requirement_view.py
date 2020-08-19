@@ -164,7 +164,7 @@ class Requirements_API(APIView):
         for i in range(len(courses)):
             courses[i] = eval(courses[i])
 
-        response = HttpResponse(content_type='application/ms-excel')
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="uwpath-schedule.xls"'
 
         wb = xlwt.Workbook(encoding='utf-8')
