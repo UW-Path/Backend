@@ -34,6 +34,7 @@ class Course_Info_API(APIView):
             #Generalization
             if code == "MATH": code = "ACTSC, AMATH, CO, MATH, PMATH, STAT"
             elif code == "SCIENCE": code = "BIOL, CHEM, EARTH, PHYS, SCI"
+            elif code == "LANGUAGE": code = "ARABIC, CHINA, CROAT, DUTCH, FR, GER, GRK, ITAL, JAPAN, KOREA, LAT, PORT, RUSS, SPAN"
 
             if "LAB" in code:
                 code = code.split(" ")[0]
