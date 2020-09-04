@@ -55,7 +55,7 @@ class Course_Info_API(APIView):
                 app = CourseInfo.objects.filter(course_code__in=code)
                 app = app.filter(course_number__gte=start).filter(course_number__lte=end)
             elif "," in code:
-                code = code.split(",")
+                code = code.split(", ")
                 app = CourseInfo.objects.filter(course_abbr__in=code)
                 app = app.filter(course_number__gte=start).filter(course_number__lte=end)
             elif code != "none":
