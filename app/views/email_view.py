@@ -23,5 +23,6 @@ class email_API(APIView):
             msg.send()
             return Response(status=status.HTTP_200_OK)
 
-        except:
+        except Exception as e:
+            print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
