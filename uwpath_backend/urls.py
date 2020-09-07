@@ -50,7 +50,6 @@ urlpatterns = [
     path(r'api/meets_prereqs/get', validation_view.UWPath_API.as_view()),
     path(r'api/communications/', communication_view.Communications_List.as_view()),
     path(r'api/communications/get', communication_view.Communications_API.as_view()),
-    path(r'api/meets_prereqs/get', validation_view.UWPath_API.as_view()),
     path(r'api/send_email', email_view.email_API.as_view()),
 
     #a little bit hardcoded below

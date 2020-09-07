@@ -107,21 +107,21 @@ class ValidationCheckAPI:
     def can_take_course(self, list_of_courses_taken, current_term_courses, course):
         # TODO Throw errors in the future
         """
-        Check if the course violates any prereq, coreq, and antireq requirments
+        Check if the course violates any prereq, coreq, and antireq requirments, return boolean along with any error message
         :param list_of_courses_taken: list[str]
         :param course: str
-        :return: Bool
+        :return: Bool, str
         """
         print(list_of_courses_taken)
 
         # ANTIREQ
         for anti_req in self.antireqs:
             if any(c in anti_req for c in list_of_courses_taken + current_term_courses):
-                return False
+                return False, "The course has an antirequisite"
 
         # Course cannot be repeated
         if course in list_of_courses_taken:
-            return False
+            return False, "Course has already been taken"
 
         # PREREQ & COREQ
         prereq_logic = self.prereq_logic
@@ -134,7 +134,10 @@ class ValidationCheckAPI:
                                                    list_of_courses_taken, i)
 
         try:
-            return eval(prereq_logic)
+            if eval(prereq_logic):
+                return True, ""
+            else:
+                return False, "Prerequisite or corequisite not met"
         except Exception as e:
             # EMAIL(course, self.prereq_courses, self.prereq_logic, list_of_courses_taken, current_term_courses, e)
             # Error Log

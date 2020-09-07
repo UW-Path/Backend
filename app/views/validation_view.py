@@ -31,7 +31,7 @@ class UWPath_API(APIView):
             list_of_courses_taken = request.GET.getlist("list_of_courses_taken[]")
             current_term_courses = request.GET.getlist("current_term_courses[]")
 
-            can_take = api.can_take_course(list_of_courses_taken, current_term_courses, pk)
+            can_take, msg = api.can_take_course(list_of_courses_taken, current_term_courses, pk)
 
             response_data = {}
 
@@ -39,6 +39,7 @@ class UWPath_API(APIView):
                 response_data["can_take"] = True
             else:
                 response_data["can_take"] = False
+                response_data["msg"] = msg
 
             return Response(response_data)
 
