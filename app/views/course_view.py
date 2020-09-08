@@ -36,7 +36,11 @@ class Course_Info_API(APIView):
             elif code == "SCIENCE": code = "BIOL, CHEM, EARTH, PHYS, SCI"
             elif code == "LANGUAGE": code = "ARABIC, CHINA, CROAT, DUTCH, FR, GER, GRK, ITAL, JAPAN, KOREA, LAT, PORT, RUSS, SPAN"
 
-            if "LAB" in code:
+            if code == "NON-MATH":
+                code = ["ACTSC", "AMATH", "CO", "MATH", "PMATH", "STAT"]
+                app = CourseInfo.objects.exclude(course_abbr__in=code)
+                app = app.filter(course_number__gte=start).filter(course_number__lte=end)
+            elif "LAB" in code:
                 code = code.split(" ")[0]
                 app = CourseInfo.objects.filter(course_abbr=code)
                 app = app.filter(course_code__contains='L')
