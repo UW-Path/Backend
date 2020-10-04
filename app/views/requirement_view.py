@@ -5,13 +5,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from xlwt import Borders
+import io
+import csv
 
 from app.models import Requirements
 from app.serializer import RequirementsSerializer
 from app.views.communication_view import Communications_List
 
-import xlwt
 from django.http import HttpResponse
 
 
@@ -150,65 +150,41 @@ class Requirements_API(APIView):
             print(e)
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    @api_view(('GET',))
+    @api_view(('POST',))
     def download_course_schedule(request):
         """
         return a excel file for users to click download
         """
-        courses = request.GET.getlist("table[]")
-        columns = request.GET.getlist('termList[]')
+        courses = request.data["table"]
+        columns = request.data["termList"]
+        rows = [[] for _ in range(len(columns))]
 
-        if not (courses and columns):
+        if not (courses and columns) or not (len(courses) and len(columns)):
             Response(status=status.HTTP_400_BAD_REQUEST)
 
-        for i in range(len(courses)):
-            courses[i] = eval(courses[i])
+        buffer = io.StringIO()
+        wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
 
-        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="uwpath-schedule.xls"'
+        wr.writerow(columns)
 
-        wb = xlwt.Workbook(encoding='utf-8')
-        ws = wb.add_sheet('Course_Schedule')  # this will make a sheet named Users Data
+        for j, term in enumerate(courses):
+            for i, course in enumerate(term):
+                if course[-1] != "WAITING":
+                    c = course[-1]
+                else:
+                    c = "/".join(course[:-1])
+                while len(rows[i]) < j:
+                    rows[i].append("")
+                if len(rows[i]) > j:
+                    rows[i][j] = c
+                else:
+                    rows[i].append(c)
 
-        # Sheet header, first row
-        row_num = 0
+        wr.writerows(rows)
 
-        title_font = xlwt.XFStyle()
-        title_font.font.bold = True
-        ws.write(0, 0, "UWPath", title_font)
-        row_num += 2
-
-        font_style = xlwt.XFStyle()
-        font_style.font.bold = True
-        font_style.borders.bottom = Borders.THIN
-
-        for i in range(len(columns)):
-            ws.col(i).width = 256 * 15  # 10 char width
-
-        for col_num in range(len(columns)):
-            ws.write(row_num, col_num, columns[col_num], font_style)  # at 0 row 0 column
-
-        # Sheet body, remaining rows
-        font_style = xlwt.XFStyle()
-
-        c = len(courses)
-        if c:
-            r = len((courses[0]))
-
-            for i in range(r):
-                row_num += 1
-                for col_num in range(c):
-                    if i < len(courses[col_num]):
-                        if courses[col_num][i][-1] != "WAITING":
-                            output = courses[col_num][i][-1]
-                        else:
-                            output = ""
-                            for j in range(len(courses[col_num][i])-1):
-                                output += courses[col_num][i][j] + "/"
-                            output = output[:-1]
-                        ws.write(row_num, col_num, output, font_style)
-
-        wb.save(response)
+        buffer.seek(0)
+        response = HttpResponse(buffer, content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=uwpath-schedule.csv'
 
         return response
 
