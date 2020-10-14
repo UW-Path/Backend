@@ -32,12 +32,12 @@ class Course_Info_API(APIView):
             code = request.GET['code'] #CS, MATH ... ETC
 
             #Generalization
-            if code == "MATH": code = "ACTSC, AMATH, CO, MATH, PMATH, STAT"
+            if code == "MATH": code = "ACTSC, AMATH, CO, CS, MATH, MATBUS, PMATH, STAT"
             elif code == "SCIENCE": code = "BIOL, CHEM, EARTH, PHYS, SCI"
             elif code == "LANGUAGE": code = "ARABIC, CHINA, CROAT, DUTCH, FR, GER, GRK, ITAL, JAPAN, KOREA, LAT, PORT, RUSS, SPAN"
 
             if code == "NON-MATH":
-                code = ["ACTSC", "AMATH", "CO", "MATH", "PMATH", "STAT"]
+                code = ["ACTSC", "AMATH", "CO", "CS", "MATH","MATBUS", "PMATH", "STAT"]
                 app = CourseInfo.objects.exclude(course_abbr__in=code)
                 app = app.filter(course_number__gte=start).filter(course_number__lte=end)
             elif "LAB" in code:
