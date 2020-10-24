@@ -168,23 +168,29 @@ class Requirements_API(APIView):
         return a excel file for users to click download
         """
         courses = request.data["table"]
-        columns = request.data["termList"]
-        rows = [[] for _ in range(len(columns))]
-
-        if not (courses and columns) or not (len(courses) and len(columns)):
+        if not courses or not len(courses):
             Response(status=status.HTTP_400_BAD_REQUEST)
 
         buffer = io.StringIO()
         wr = csv.writer(buffer, quoting=csv.QUOTE_ALL)
 
-        wr.writerow(columns)
+        terms = []
+        for i in range(len(courses)):
+            term = str(i//2 + 1) + chr(i % 2 + 65)
+            terms.append(term)
 
+        wr.writerow(terms)
+
+        rows = []
         for j, term in enumerate(courses):
             for i, course in enumerate(term):
                 if course[-1] != "WAITING":
                     c = course[-1]
                 else:
                     c = "/".join(course[:-1])
+                while len(rows) <= i:
+                    rows.append([])
+                print(rows, i)
                 while len(rows[i]) < j:
                     rows[i].append("")
                 if len(rows[i]) > j:
