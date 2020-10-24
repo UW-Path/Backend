@@ -112,7 +112,6 @@ class ValidationCheckAPI:
         :param course: str
         :return: Bool, str
         """
-        print(list_of_courses_taken)
 
         # ANTIREQ
         for anti_req in self.antireqs:
@@ -144,7 +143,14 @@ class ValidationCheckAPI:
             # TODO: Prevent sending multiple emails with the same error in a short amount of time
             error_message = "Error Message: " + str(e) + "."
             error_message += "\n\ncan_take_course({}, {}, {})".format(list_of_courses_taken, current_term_courses, course)
+
+            error_message += "\n\nAntireqs: " + str(self.antireqs)
+            error_message += "\n\nPrereq Logic: " + str(self.prereq_logic)
+            error_message += "\n\nPrereq Courses: " + str(self.prereq_courses)
+            error_message += "\n\nCoreq Logic: " + str(self.coreq_logic)
+            error_message += "\n\nCoreq Courses: " + str(self.coreq_courses)
             error_message += "\n\nOccurred at: " + str(datetime.now()) + " (UTC)"
+
             msg = EmailMessage("Error in ValidationCheckAPI/CanTakeCourse",
                                error_message,
                                settings.EMAIL_HOST_USER,
