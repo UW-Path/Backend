@@ -52,9 +52,6 @@ urlpatterns = [
     path(r'api/communications/get', communication_view.Communications_API.as_view()),
     path(r'send_email', email_view.email_API.as_view()),
 
-    # Get req based on minor, major, options
-    path(r'api/getRequirements', uwPath.requirements, name='requirements'),
-
     path(r'contact', uwPath.contact, name='contact'),
     re_path(r'(?P<pk>\d+)', uwPath.AppView.as_view()),
 ]
