@@ -50,35 +50,10 @@ urlpatterns = [
     path(r'api/meets_prereqs/get', validation_view.UWPath_API.as_view()),
     path(r'api/communications/', communication_view.Communications_List.as_view()),
     path(r'api/communications/get', communication_view.Communications_API.as_view()),
-    path(r'api/send_email', email_view.email_API.as_view()),
+    path(r'send_email', email_view.email_API.as_view()),
 
-    #a little bit hardcoded below
-    path(r'major/<str:major>/<str:majorExtended>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/', uwPath.requirements, name='requirements'),
-
-    # major + option
-    path(r'major/<str:major>/<str:majorExtended>/option/<str:option>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/<str:majorExtended>/option/<str:option>/<str:optionExtended>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/option/<str:option>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/option/<str:option>/<str:optionExtended>/', uwPath.requirements, name='requirements'),
-
-    # major + minor
-    path(r'major/<str:major>/minor/<str:minor>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/<str:majorExtended>/minor/<str:minor>/', uwPath.requirements, name='requirements'),
-
-    # major + option + minor
-
-    path(r'major/<str:major>/<str:majorExtended>/option/<str:option>/minor/<str:minor>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/<str:majorExtended>/option/<str:option>/<str:optionExtended>/minor/<str:minor>/', uwPath.requirements,
-         name='requirements'),
-    path(r'major/<str:major>/option/<str:option>/minor/<str:minor>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/option/<str:option>/<str:optionExtended>/minor/<str:minor>/', uwPath.requirements, name='requirements'),
-
-    path(r'major/<str:major>/<str:majorExtended>/minor/<str:minor>/option/<str:option>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/<str:majorExtended>/minor/<str:minor>/option/<str:option>/<str:optionExtended>/', uwPath.requirements,
-         name='requirements'),
-    path(r'major/<str:major>/minor/<str:minor>/option/<str:option>/', uwPath.requirements, name='requirements'),
-    path(r'major/<str:major>/minor/<str:minor>/option/<str:option>/<str:optionExtended>/', uwPath.requirements, name='requirements'),
+    # Get req based on minor, major, options
+    path(r'api/getRequirements', uwPath.requirements, name='requirements'),
 
     path(r'contact', uwPath.contact, name='contact'),
     re_path(r'(?P<pk>\d+)', uwPath.AppView.as_view()),
