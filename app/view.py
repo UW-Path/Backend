@@ -27,6 +27,7 @@ def index(request):
 
 
 def requirements(request):
+    ##### !important this is depricated code
     # Note option includes requirement
     # One major and option allowed, allow flexibility for multiple minors
 
@@ -35,11 +36,15 @@ def requirements(request):
     #minors is a string seperated by commas
     minors = request.GET['minors']
 
+    if not major:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
     minors = minors.split(", ")
 
-
+    #flag to include table
     has_table1 = False
     has_table2 = False
+
     #Renders the requiremnts + table for major/minor requested for
     #communications for math
     table1 = Communications_List().get_list()
@@ -80,7 +85,7 @@ def requirements(request):
                         requirements = requirements.distinct()
                     break
     else:
-        return HttpResponseNotFound('<h1>404 Not Found: Major not valid</h1>')
+        return HttpResponseNotFound('Major not valid')
 
     #filter options returned
     majorName = requirements.first()['major_name']
@@ -98,7 +103,7 @@ def requirements(request):
         option_requirements = option_requirements.filter(Q(major_name = majorName) | Q(plan_type = "Joint"))
         option_requirements = option_requirements.exclude(course_codes__in = requirements_course_codes_list)
         if not option_requirements:
-            return HttpResponseNotFound('<h1>404 Not Found: Minor not valid</h1>')
+            return HttpResponseNotFound('404 Not Found: Minor not valid')
 
     if minors:
         minor_requirements = dict()
@@ -114,7 +119,7 @@ def requirements(request):
                 minor_requirements[minor] = minor_requirements[minor].exclude(course_codes__in=option_course_codes_list)
 
             if not minor_requirements[minor]:
-                return HttpResponseNotFound('<h1>404 Not Found: Minor not valid</h1>')
+                return HttpResponseNotFound('404 Not Found: Minor not valid')
             else: minor_requirements[minor] = list(minor_requirements[minor])
 
     data = {

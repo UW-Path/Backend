@@ -1,5 +1,5 @@
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseNotFound
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -36,13 +36,22 @@ class Requirements_API(APIView):
     def requirements(request):
         # Note option includes requirement
         try:
-            major = request.GET['major']
-            option = request.GET['option']
-            minor = request.GET['minor']
+            # Note option includes requirement
+            # One major and option allowed, allow flexibility for multiple minors
+
+            major = str(request.GET['major'])
+            option = str(request.GET['option'])
+            # minors is a string seperated by commas
+            minors = request.GET['minors']
 
             if not major:
-                Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_404_NOT_FOUND)
 
+            minors = minors.split(", ")
+
+            # flag to include table
+            has_table1 = False
+            has_table2 = False
 
             # Renders the requiremnts + table for major/minor requested for
             # communications for math
@@ -54,11 +63,17 @@ class Requirements_API(APIView):
 
             option_list = Requirements_List().get_unique_major_website()
             # Prevent duplicate courses in table II and major
-            requirements = Requirements_List().get_major_requirement(major).exclude(course_codes__in=table2_course_codes)
+            requirements = Requirements_List().get_major_requirement(major).exclude(
+                course_codes__in=table2_course_codes)
 
             # check for additional req in major
             if requirements:
                 additional_req = requirements.first()["additional_requirements"]
+                if "Table I" in additional_req:
+                    has_table1 = True
+                if "Table II" in additional_req:
+                    has_table2 = True
+
                 if "Honours" or "BCS" in additional_req:
                     # find additional req
                     additional_req_list = additional_req.split(",")
@@ -78,9 +93,8 @@ class Requirements_API(APIView):
                                     requirements = table2 | requirements
                                 requirements = requirements.distinct()
                             break
-
-            if not requirements:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return HttpResponseNotFound('Major not valid')
 
             # filter options returned
             majorName = requirements.first()['major_name']
@@ -99,56 +113,54 @@ class Requirements_API(APIView):
                 option_requirements = option_requirements.filter(Q(major_name=majorName) | Q(plan_type="Joint"))
                 option_requirements = option_requirements.exclude(course_codes__in=requirements_course_codes_list)
                 if not option_requirements:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
+                    return HttpResponseNotFound('404 Not Found: Minor not valid')
 
-            if minor:
-                minor_requirements = Requirements_List().get_minor_requirement(minor)
-                requirements_course_codes_list = [r["course_codes"] for r in requirements]
-                if option:
-                    option_course_codes_list = [r["course_codes"] for r in option_requirements]
+            if minors:
+                minor_requirements = dict()
+                for minor in minors:
+                    minor_requirements[minor] = Requirements_List().get_minor_requirement(minor)
+                    requirements_course_codes_list = [r["course_codes"] for r in requirements]
+                    if option:
+                        option_course_codes_list = [r["course_codes"] for r in option_requirements]
 
-                minor_requirements = minor_requirements.exclude(course_codes__in=requirements_course_codes_list)
+                    minor_requirements[minor] = minor_requirements[minor].exclude(
+                        course_codes__in=requirements_course_codes_list)
 
-                if option:
-                    minor_requirements = minor_requirements.exclude(course_codes__in=option_course_codes_list)
-                if not minor_requirements:
-                    return Response(status=status.HTTP_400_BAD_REQUEST)
-                print("fetch minor req")
+                    if option:
+                        minor_requirements[minor] = minor_requirements[minor].exclude(
+                            course_codes__in=option_course_codes_list)
 
+                    if not minor_requirements[minor]:
+                        return HttpResponseNotFound('404 Not Found: Minor not valid')
+                    else:
+                        minor_requirements[minor] = list(minor_requirements[minor])
 
-            #return Response
+            data = {
+                'option_list': list(option_list),
+                'minor_list': list(minor_list),
+                'major': major,
+                'requirements': list(requirements)
+            }
 
-            # AllReqs = namedtuple('AllRequirement', ('option_list', 'minor_list'))
-            # allReqs = AllReqs(option_list=option_list, minor_list=minor_list)
-            #
-            # return Response(status=status.HTTP_404_NOT_FOUND)
+            if has_table1:
+                data['table1'] = list(table1)
+            if has_table2:
+                data['table2'] = list(table2)
 
+            if option:
+                data['option'] = option
+                data['option_requirements'] = list(option_requirements)
 
+            if minors:
+                data['minor'] = minors
+                # This is a dictionary of all the minors! Since we can have multiple minors
+                # minor_requirements is a dictionary object
+                data['minor_requirements'] = minor_requirements
 
-
-            if option and minor:
-                return JsonResponse({'option_list': list(option_list), 'minor_list': list(minor_list), 'major': major,
-                               'requirements': list(requirements), 'option': option,
-                               'option_requirements': list(option_requirements), 'minor': minor,
-                               'minor_requirements': list(minor_requirements),
-                               'table1': list(table1), 'table2': list(table2)})
-
-            elif option:
-                return JsonResponse({'option_list': list(option_list), 'minor_list': list(minor_list), 'major': major,
-                                                      'requirements': list(requirements), 'option': option,
-                                                      'option_requirements': list(option_requirements), 'table1': list(table1),
-                                                      'table2': list(table2)})
-            elif minor:
-                return JsonResponse({'option_list': list(option_list), 'minor_list': list(minor_list), 'major': major,
-                               'requirements': list(requirements), 'minor': minor,
-                               'minor_requirements': list(minor_requirements), 'table1': list(table1), 'table2': list(table2)})
-
-            else:
-                return JsonResponse({'option_list':list(option_list), 'minor_list':list(minor_list), 'major':major,
-                                     'requirements': list(requirements), 'table1': list(table1), 'table2': list(table2)})
+            return JsonResponse(data)
         except Exception as e:
             print(e)
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @api_view(('POST',))
     def download_course_schedule(request):
