@@ -117,11 +117,11 @@ class ValidationCheckAPI:
         # ANTIREQ
         for anti_req in self.antireqs:
             if any(c in anti_req for c in list_of_courses_taken + current_term_courses):
-                return False, "The course has an antirequisite"
+                return False, "The course has an antirequisite."
 
         # Course cannot be repeated
         if course in list_of_courses_taken:
-            return False, "Course has already been taken"
+            return False, "Course has already been taken."
 
         # PREREQ & COREQ
         prereq_logic = self.prereq_logic
@@ -137,7 +137,7 @@ class ValidationCheckAPI:
             if eval(prereq_logic):
                 return True, ""
             else:
-                return False, "Prerequisite or corequisite not met"
+                return False, "Prerequisite or corequisite not met."
         except Exception as e:
             # EMAIL(course, self.prereq_courses, self.prereq_logic, list_of_courses_taken, current_term_courses, e)
             # Error Log
