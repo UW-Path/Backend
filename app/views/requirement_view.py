@@ -41,20 +41,21 @@ class Requirements_API(APIView):
 
             major = str(request.GET['major'])
             option = str(request.GET['option'])
-            # minors is a string seperated by commas
-            minors = request.GET['minors']
+            # minors is a string separated by ,
+            minors = str(request.GET['minors'])
 
             if not major:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            if minors:
-                minors = minors.split(", ")
+            minors = minors.split(",")
+            if len(minors) == 1 and minors[0] == "":
+                minors = []
 
             # flag to include table
             has_table1 = False
             has_table2 = False
 
-            # Renders the requiremnts + table for major/minor requested for
+            # Renders the requirements + table for major/minor requested for
             # communications for math
             table1 = Communications_List().get_list()
             # Basic honors math req
@@ -109,7 +110,7 @@ class Requirements_API(APIView):
             minor_list = minor_list.order_by('program_name')
 
             # specializations and options
-            if option:
+            if option is not None and len(option):
                 option_requirements = Requirements_List().get_minor_requirement(option)
                 requirements_course_codes_list = [r["course_codes"] for r in requirements]
                 option_requirements = option_requirements.filter(Q(major_name=majorName) | Q(plan_type="Joint"))
@@ -117,7 +118,7 @@ class Requirements_API(APIView):
                 if not option_requirements:
                     return HttpResponseNotFound('404 Not Found: Minor not valid')
 
-            if minors:
+            if minors is not None and len(minors):
                 minor_requirements = dict()
                 for minor in minors:
                     minor_requirements[minor] = Requirements_List().get_minor_requirement(minor)
