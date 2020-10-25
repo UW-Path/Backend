@@ -100,13 +100,19 @@ class Requirements_API(APIView):
 
             # filter options returned
             majorName = requirements.first()['major_name']
+
             faculty = requirements.first()['faculty']
             option_list = option_list.filter(Q(major_name=majorName) | Q(plan_type="Joint", faculty=faculty)).exclude(
                 Q(plan_type="Major") | Q(plan_type="Minor"))
             option_list = option_list.order_by('plan_type', 'program_name')
 
+            #exclude minor of the major
+            #Computer Science Major students shouldn't be able to select CS minor
+            excludeMinor = majorName + " Minor"
             # filter minor returned
-            minor_list = Requirements_List().get_unique_major_website().filter(plan_type="Minor")
+            minor_list = Requirements_List().get_unique_major_website().filter(plan_type="Minor").exclude(
+                Q(program_name=excludeMinor)
+            )
             minor_list = minor_list.order_by('program_name')
 
             # specializations and options
