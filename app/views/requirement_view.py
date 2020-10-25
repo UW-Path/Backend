@@ -47,7 +47,8 @@ class Requirements_API(APIView):
             if not major:
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            minors = minors.split(", ")
+            if minors:
+                minors = minors.split(", ")
 
             # flag to include table
             has_table1 = False
@@ -98,7 +99,8 @@ class Requirements_API(APIView):
 
             # filter options returned
             majorName = requirements.first()['major_name']
-            option_list = option_list.filter(Q(major_name=majorName) | Q(plan_type="Joint")).exclude(
+            faculty = requirements.first()['faculty']
+            option_list = option_list.filter(Q(major_name=majorName) | Q(plan_type="Joint", faculty=faculty)).exclude(
                 Q(plan_type="Major") | Q(plan_type="Minor"))
             option_list = option_list.order_by('plan_type', 'program_name')
 
