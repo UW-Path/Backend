@@ -51,10 +51,6 @@ class Requirements_API(APIView):
             if len(minors) == 1 and minors[0] == "":
                 minors = []
 
-            # flag to include table
-            has_table1 = False
-            has_table2 = False
-
             # Renders the requirements + table for major/minor requested for
             # communications for math
             table1 = Communications_List().get_list()
@@ -71,10 +67,6 @@ class Requirements_API(APIView):
             # check for additional req in major
             if requirements:
                 additional_req = requirements.first()["additional_requirements"]
-                if "Table I" in additional_req:
-                    has_table1 = True
-                if "Table II" in additional_req:
-                    has_table2 = True
 
                 if "Honours" or "BCS" in additional_req:
                     # find additional req
@@ -148,13 +140,10 @@ class Requirements_API(APIView):
                 'option_list': list(option_list),
                 'minor_list': list(minor_list),
                 'major': major,
-                'requirements': list(requirements)
+                'requirements': list(requirements),
+                'table1': list(table1),
+                'table2': list(table2)
             }
-
-            if has_table1:
-                data['table1'] = list(table1)
-            if has_table2:
-                data['table2'] = list(table2)
 
             if option:
                 data['option'] = option
