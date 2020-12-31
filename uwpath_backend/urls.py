@@ -18,7 +18,7 @@ from django.contrib import admin
 
 import app.view as uwPath
 import app.views.course_view as course_view
-import app.views.prerq_view as prereq_view
+import app.views.prereq_view as prereq_view
 import app.views.antireq_view as antireq_view
 import app.views.breath_view as breath_view
 import app.views.requirement_view as requirement_view

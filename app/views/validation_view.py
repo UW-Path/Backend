@@ -7,7 +7,7 @@ from API.ValidationCheckAPI import ValidationCheckAPI
 from app.models import CourseInfo
 from app.views.antireq_view import Antireqs_API
 from app.views.course_view import Course_Info_API
-from app.views.prerq_view import Prereqs_API
+from app.views.prereq_view import Prereqs_API
 
 
 class UWPath_API(APIView):
@@ -28,8 +28,8 @@ class UWPath_API(APIView):
             api.set_prereqs(prereqs.logic, prereqs.courses)
             api.set_antireqs(antireqs.antireq)
 
-            list_of_courses_taken = request.GET.getlist("list_of_courses_taken[]")
-            current_term_courses = request.GET.getlist("current_term_courses[]")
+            list_of_courses_taken = UWPath_API.__dup_E_courses(request.GET.getlist("list_of_courses_taken[]"))
+            current_term_courses = UWPath_API.__dup_E_courses(request.GET.getlist("current_term_courses[]"))
 
             can_take, msg = api.can_take_course(list_of_courses_taken, current_term_courses, pk)
 
@@ -46,3 +46,11 @@ class UWPath_API(APIView):
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    @staticmethod
+    def __dup_E_courses(courses):
+        """Some courses may end with E. In this case, we handle as taken with E and without"""
+        n = len(courses)
+        for i in range(n):
+            if courses[i][-1] == "E":
+                courses.append(courses[i][:-1])
+        return courses
