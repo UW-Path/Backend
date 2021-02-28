@@ -144,6 +144,12 @@ EMAIL_HOST_USER = os.environ.get('UWPath_Email_Account')
 EMAIL_HOST_PASSWORD = os.environ.get('UWPath_Email_Password')
 EMAIL_USE_TLS = True
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
+}
+
 CORS_ORIGIN_ALLOW_ALL=True
 
 CORS_ORIGIN_WHITELIST = [
