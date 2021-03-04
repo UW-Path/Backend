@@ -36,6 +36,12 @@ class Requirements_API(APIView):
     def requirements(request):
         # Note option includes requirement
         try:
+            calender_year = str(request.GET['calender_year'])
+        except:
+            calender_year = "2020-2021" #TODO: Adrian you can change this as needed
+
+
+        try:
             # Note option includes requirement
             # One major and option allowed, allow flexibility for multiple minors
 
@@ -55,13 +61,13 @@ class Requirements_API(APIView):
             # communications for math
             table1 = Communications_List().get_list()
             # Basic honors math req
-            table2 = Requirements_List().get_major_requirement("Table II")
+            table2 = Requirements_List().get_major_requirement("Table II",calender_year)
             # so we don't exclude courses from requirement
             table2_course_codes = [r["course_codes"] for r in table2 if ("Table II" in r["additional_requirements"])]
 
             option_list = Requirements_List().get_unique_major_website()
             # Prevent duplicate courses in table II and major
-            requirements = Requirements_List().get_major_requirement(major).exclude(
+            requirements = Requirements_List().get_major_requirement(major, calender_year).exclude(
                 course_codes__in=table2_course_codes)
 
             # check for additional req in major
@@ -74,14 +80,14 @@ class Requirements_API(APIView):
                     for i in additional_req_list:
                         if "Honours" in i or "BCS" in i:
                             if i == "BCS":
-                                bcs_req = Requirements_List().get_major_requirement("Bachelor of Computer Science")
+                                bcs_req = Requirements_List().get_major_requirement("Bachelor of Computer Science", calender_year)
                                 requirements = bcs_req | requirements
                                 if "Table II" in bcs_req.first()["additional_requirements"]:
                                     requirements = table2 | requirements
                                 requirements = requirements.distinct()
                             else:
                                 i = str(i).replace("Honours ", "")
-                                new_req = Requirements_List().get_major_requirement(i)
+                                new_req = Requirements_List().get_major_requirement(i, calender_year)
                                 requirements = new_req | requirements
                                 if "Table II" in new_req.first()["additional_requirements"]:
                                     requirements = table2 | requirements
@@ -109,7 +115,7 @@ class Requirements_API(APIView):
 
             # specializations and options
             if option is not None and len(option):
-                option_requirements = Requirements_List().get_minor_requirement(option)
+                option_requirements = Requirements_List().get_minor_requirement(option, calender_year)
                 requirements_course_codes_list = [r["course_codes"] for r in requirements]
                 option_requirements = option_requirements.filter(Q(major_name=majorName) | Q(plan_type="Joint"))
                 option_requirements = option_requirements.exclude(course_codes__in=requirements_course_codes_list)
@@ -119,7 +125,7 @@ class Requirements_API(APIView):
             if minors is not None and len(minors):
                 minor_requirements = dict()
                 for minor in minors:
-                    minor_requirements[minor] = Requirements_List().get_minor_requirement(minor)
+                    minor_requirements[minor] = Requirements_List().get_minor_requirement(minor, calender_year)
                     requirements_course_codes_list = [r["course_codes"] for r in requirements]
                     if option:
                         option_course_codes_list = [r["course_codes"] for r in option_requirements]
@@ -214,17 +220,19 @@ class Requirements_List(APIView):
 
     @api_view(('GET',))
     def get_unique_major(self, format=None):
+        # TODO Adrian for you to add calendar year accordingly. Can do so by adding year={VAR} under filter
         querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link').filter(plan_type="Major").order_by('program_name').distinct()
         return JsonResponse({'Major': list(querySet)})
 
     def get_unique_major_website(self, format=None):
+        # TODO Adrian for you to add calendar year accordingly. Can do so by adding year={VAR} under filter
         querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link').order_by('program_name').distinct()
         return querySet
 
-    def get_major_requirement(self, major):
-        querySet = Requirements.objects.values().filter(program_name=major).order_by('program_name')
+    def get_major_requirement(self, major, year):
+        querySet = Requirements.objects.values().filter(program_name=major, year=year).order_by('program_name')
         return querySet
 
-    def get_minor_requirement(self, minor):
-        querySet = Requirements.objects.values().filter(program_name=minor).order_by('program_name')
+    def get_minor_requirement(self, minor, year):
+        querySet = Requirements.objects.values().filter(program_name=minor, year=year).order_by('program_name')
         return querySet
