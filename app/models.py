@@ -180,6 +180,7 @@ class Requirements(models.Model):
     additional_requirements = models.CharField(max_length=255, blank=True, null=True)
     faculty = models.CharField(max_length=50, null=False)
     link = models.CharField(max_length=255, null=False)
+    year = models.CharField(max_length=255, null=False)
 
     class Meta:
         managed = False
