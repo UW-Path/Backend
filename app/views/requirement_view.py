@@ -221,7 +221,7 @@ class Requirements_List(APIView):
     @api_view(('GET',))
     def get_unique_major(self, format=None):
         # This code is fine as it fetches all distinct programs (regardless of years)
-        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link').filter(plan_type="Major").order_by('program_name').distinct()
+        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link', 'year').filter(plan_type="Major").order_by('program_name').distinct()
         return JsonResponse({'Major': list(querySet)})
 
     @api_view(('GET',))
@@ -234,7 +234,7 @@ class Requirements_List(APIView):
 
     def get_unique_major_website(self, format=None):
         # TODO Adrian for you to add calendar year accordingly. Can do so by adding year={VAR} under filter
-        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link').order_by('program_name').distinct()
+        querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link', 'year').order_by('program_name').distinct()
         return querySet
 
     def get_major_requirement(self, major, year):
