@@ -36,9 +36,9 @@ class Requirements_API(APIView):
     def requirements(request):
         # Note option includes requirement
         try:
-            calender_year = str(request.GET['calender_year'])
+            calendar_year = str(request.GET['calendar_year'])
         except:
-            calender_year = "2020-2021" #TODO: Adrian you can change this as needed
+            calendar_year = "2020-2021" #TODO: Adrian you can change this as needed
 
 
         try:
@@ -61,13 +61,13 @@ class Requirements_API(APIView):
             # communications for math
             table1 = Communications_List().get_list()
             # Basic honors math req
-            table2 = Requirements_List().get_major_requirement("Table II",calender_year)
+            table2 = Requirements_List().get_major_requirement("Table II",calendar_year)
             # so we don't exclude courses from requirement
             table2_course_codes = [r["course_codes"] for r in table2 if ("Table II" in r["additional_requirements"])]
 
             option_list = Requirements_List().get_unique_major_website()
             # Prevent duplicate courses in table II and major
-            requirements = Requirements_List().get_major_requirement(major, calender_year).exclude(
+            requirements = Requirements_List().get_major_requirement(major, calendar_year).exclude(
                 course_codes__in=table2_course_codes)
 
             # check for additional req in major
@@ -80,14 +80,14 @@ class Requirements_API(APIView):
                     for i in additional_req_list:
                         if "Honours" in i or "BCS" in i:
                             if i == "BCS":
-                                bcs_req = Requirements_List().get_major_requirement("Bachelor of Computer Science", calender_year)
+                                bcs_req = Requirements_List().get_major_requirement("Bachelor of Computer Science", calendar_year)
                                 requirements = bcs_req | requirements
                                 if "Table II" in bcs_req.first()["additional_requirements"]:
                                     requirements = table2 | requirements
                                 requirements = requirements.distinct()
                             else:
                                 i = str(i).replace("Honours ", "")
-                                new_req = Requirements_List().get_major_requirement(i, calender_year)
+                                new_req = Requirements_List().get_major_requirement(i, calendar_year)
                                 requirements = new_req | requirements
                                 if "Table II" in new_req.first()["additional_requirements"]:
                                     requirements = table2 | requirements
@@ -115,7 +115,7 @@ class Requirements_API(APIView):
 
             # specializations and options
             if option is not None and len(option):
-                option_requirements = Requirements_List().get_minor_requirement(option, calender_year)
+                option_requirements = Requirements_List().get_minor_requirement(option, calendar_year)
                 requirements_course_codes_list = [r["course_codes"] for r in requirements]
                 option_requirements = option_requirements.filter(Q(major_name=majorName) | Q(plan_type="Joint"))
                 option_requirements = option_requirements.exclude(course_codes__in=requirements_course_codes_list)
@@ -125,7 +125,7 @@ class Requirements_API(APIView):
             if minors is not None and len(minors):
                 minor_requirements = dict()
                 for minor in minors:
-                    minor_requirements[minor] = Requirements_List().get_minor_requirement(minor, calender_year)
+                    minor_requirements[minor] = Requirements_List().get_minor_requirement(minor, calendar_year)
                     requirements_course_codes_list = [r["course_codes"] for r in requirements]
                     if option:
                         option_course_codes_list = [r["course_codes"] for r in option_requirements]
