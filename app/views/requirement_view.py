@@ -60,8 +60,8 @@ class Requirements_API(APIView):
             # Renders the requirements + table for major/minor requested for
             # communications for math
             table1 = Communications_List().get_list()
-            # Basic honors math req
-            table2 = Requirements_List().get_major_requirement("Table II",calendar_year)
+            # Basic honors math req - I think we don't need to update this every year - but prob should in the future
+            table2 = Requirements_List().get_major_requirement("Table II","2020-2021")
             # so we don't exclude courses from requirement
             table2_course_codes = [r["course_codes"] for r in table2 if ("Table II" in r["additional_requirements"])]
 
