@@ -1,10 +1,19 @@
-FROM python:3
-ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE uwpath_backend.settings
-RUN mkdir /code
-WORKDIR /code
-COPY requirements.txt /code/
-RUN pip install -r requirements.txt
-COPY . /code/
-ENV PATH /code/:$PATH
+FROM ubuntu:18.04 as base
+
+COPY . /opt/uwpath.backend
+WORKDIR /opt/uwpath.backend
+
+RUN apt update
+RUN apt install git ssh -y
+RUN apt install wget curl vim libssl-dev ipython -y
+
+FROM base as python38
+RUN apt update && apt install python3.8 python3.8-dev python3-pip -y
+
+FROM python38 as uwpath
+
+RUN pip3 install requests && python3.8 deploy/get-poetry.py -y && . ~/.poetry/env && poetry export -f requirements.txt -o requirements.txt
+RUN pip3 install -r requirements.txt
+
+ENV PATH /opt/uwpath.backend/:$PATH
 EXPOSE 8000
