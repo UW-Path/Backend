@@ -4,8 +4,8 @@ services:
   web:
     build: .
     command: bash -c "
-      python manage.py migrate
-      && python manage.py runserver 0.0.0.0:8000
+      python manage.py migrate &&    
+      gunicorn uwpath_backend.wsgi --bind 0.0.0.0:8000 
       "
     volumes:
       - .:/code
@@ -15,6 +15,8 @@ services:
       - dataparsing_default
     environment:
       - DB_HOST=db
+      - SECRET_KEY=7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk
+      - DJANGO_ENV=prod
 networks:
   dataparsing_default:
     external: true
