@@ -1,20 +1,29 @@
 version: '3'
 
 services:
-  web:
+  backend:
+    container_name: uwpath_backend
     build: .
     command: bash -c "
       python manage.py migrate
       && python manage.py runserver 0.0.0.0:8000
       "
-    volumes:
-      - .:/code
+    # volumes:
+    #   - ./Wallet_uwpathparallel:/code/Wallet_uwpathparallel
     ports:
       - "8000:8000"
     networks:
-      - dataparsing_default
+      - uwpath_db_network
+      - uwpath_backend_network
     environment:
-      - DB_HOST=db
+      - UWPATH_ENVIRONMENT=docker
+    #  - SECRET_KEY=7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk
+    #  - DJANGO_SETTINGS_MODULE=uwpath_backend.dev
+    #   - TNS_ADMIN=/code/Wallet_uwpathparallel
+
 networks:
-  dataparsing_default:
+  uwpath_db_network:
     external: true
+  uwpath_backend_network:
+    driver: bridge
+    name: uwpath_backend_network

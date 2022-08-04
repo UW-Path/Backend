@@ -84,8 +84,8 @@ DATABASES = {
         'NAME': 'ORCLCDB' if os.getenv("ORACLE_DSN") is None else os.getenv("ORACLE_DSN"),
         'USER': 'SYSTEM' if os.getenv("DB_USER") is None else os.getenv("DB_USER"),
         'PASSWORD': 'password' if os.getenv("DB_PASS") is None else os.getenv("DB_PASS"),
-        'HOST': 'db' if os.getenv("UWPATH_ENVIRONMENT") == "docker" else '',
-        'PORT': '1521' if os.getenv("UWPATH_ENVIRONMENT") == "docker" is None else ''
+        'HOST': 'uwpath_oracle_db' if os.getenv("UWPATH_ENVIRONMENT") == "docker" else '',
+        'PORT': '1521' if os.getenv("UWPATH_ENVIRONMENT") == "docker" else ''
     }
 }
 
