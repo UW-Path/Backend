@@ -1,4 +1,5 @@
 FROM python:3.7
+
 ENV PYTHONUNBUFFERED 1
 ENV DJANGO_SETTINGS_MODULE uwpath_backend.settings
 WORKDIR /opt/oracle
