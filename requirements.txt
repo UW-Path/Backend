@@ -1,4 +1,4 @@
-Django==3.2.0
+Django==3.2.15
 django-rest-framework==0.1.0
 djangorestframework==3.11.2
 djangorestframework-jsonapi==3.0.0
