@@ -81,11 +81,11 @@ WSGI_APPLICATION = 'uwpath_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': 'ORCLCDB' if os.getenv("ORACLE_DSN") is None else os.getenv("ORACLE_DSN"),
-        'USER': 'SYSTEM' if os.getenv("DB_USER") is None else os.getenv("DB_USER"),
-        'PASSWORD': 'password' if os.getenv("DB_PASS") is None else os.getenv("DB_PASS"),
-        'HOST': 'uwpath_oracle_db' if os.getenv("UWPATH_ENVIRONMENT") == "docker" else '',
-        'PORT': '1521' if os.getenv("UWPATH_ENVIRONMENT") == "docker" else ''
+        'NAME': os.getenv("ORACLE_DSN"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASS"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT")
     }
 }
 
@@ -158,3 +158,5 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:8000',
     'http://0.0.0.0:8000',
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
