@@ -4,5 +4,5 @@ jobs:
   check-bats-version:
     runs-on: ubuntu-latest
     steps:
-      - run: ssh ubuntu@${{UWPATH_IP}} -i ${{UWPATH_PRIVATE_KEY}}
+      - run: ssh ubuntu@${{secrets.UWPATH_IP}} -i ${{secrets.UWPATH_PRIVATE_KEY}}
       - run: echo "success"
