@@ -7,5 +7,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: |
+        docker network create uwpath_backend_network
         docker-compose up
     
