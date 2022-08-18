@@ -7,6 +7,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: |
-        docker network create uwpath_backend_network
+        docker network ls|grep uwpath_backend_network > /dev/null || docker network create uwpath_backend_network
         docker-compose up
     
