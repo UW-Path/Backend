@@ -12,6 +12,6 @@ jobs:
         echo ${{ secrets.UWPATH_PRIVATE_KEY }} > ~/.ssh/id_rsa
         ssh-keyscan -H 129.153.61.57 > ~/.ssh/known_hosts
     - name: SSH Into Parallel Server
-      run: ssh ubuntu@129.153.61.57
+      run: ssh ubuntu@${{ secrets.UWPATH_IP }}
     - run: ls
     
