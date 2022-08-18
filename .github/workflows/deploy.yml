@@ -2,11 +2,10 @@ name: remote ssh command
 on: [push]
 jobs:
   build:
-    name: Build
+    name: deploy
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
-    - run: |
-        docker network ls|grep uwpath_backend_network > /dev/null || docker network create uwpath_backend_network
-        docker-compose up
+    - run: ssh ubuntu@${{secrets.UWPATH_IP}} --i ${{secrets.UWPATH_PRIVATE_KEY}}
+    - run: echo ls
     
