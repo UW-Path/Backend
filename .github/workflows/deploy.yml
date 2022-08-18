@@ -5,4 +5,8 @@ jobs:
     name: Build
     runs-on: self-hosted
     steps:
-    - run: echo HELLO WORLD
+    - uses: actions/checkout@v3
+    - run: |
+        cd Backend
+        ls
+    
