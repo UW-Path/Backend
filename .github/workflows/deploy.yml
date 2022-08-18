@@ -1,11 +1,13 @@
 name: remote ssh command
 on: [push]
 jobs:
-  build:
+  deploy:
     name: deploy
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
-    - run: ssh ubuntu@${{secrets.UWPATH_IP}} --i ${{secrets.UWPATH_PRIVATE_KEY}}
-    - run: echo ls
+    - run: ls
+    - run: echo ${{secrets.UWPATH_PRIVATE_KEY}} > id_uwpath_parallel.key
+    - run: ssh ubuntu@${{secrets.UWPATH_IP}} -i id_uwpath_parallel.key
+    - run: ls
     
