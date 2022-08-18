@@ -7,7 +7,5 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: |
-        ls
-        cd Backend
-        ls
+        docker-compose up
     
