@@ -6,7 +6,12 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
-    - run: echo ${{secrets.UWPATH_PRIVATE_KEY}} > id_uwpath_parallel.key
-    - run: ssh -i id_uwpath_parallel.key ubuntu@129.153.61.57
+    - name: Create SSH Key
+      run: |
+        install -m 600 -D /dev/null ~/.ssh/id_rsa
+        echo ${{ secrets.UWPATH_PRIVATE_KEY }} > ~/.ssh/id_rsa
+        ssh-keyscan -H 129.153.61.57 > ~/.ssh/known_hosts
+    - name: SSH Into Parallel Server
+      run: ssh ubuntu@129.153.61.57
     - run: ls
     
