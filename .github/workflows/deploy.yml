@@ -17,6 +17,7 @@ jobs:
           docker tag $(docker images uwpath_backend --format "{{.ID}}") uwpathdocker/uwpath_backend:int
           docker push uwpathdocker/uwpath_backend:int
     - name: Clean Env
-      run: docker system prune --volumes -af
-      run: docker logout 
+      run: |
+        docker system prune --volumes -af
+        docker logout 
     
