@@ -2,6 +2,7 @@ version: '3'
 
 services:
   backend:
+    image: uwpath_backend
     container_name: uwpath_backend
     build: .
     command: bash -c "
