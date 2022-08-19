@@ -6,12 +6,17 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
-    - name: Prepare Env
-      run : docker system prune --volumes -af
+    - name: Docker Login
+      run: docker login --username ${{ secrets.UWPATH_DOCKER_USER }} --password ${{ secrets.UWPATH_DOCKER_PASSWORD }}
     - name: Build Image
       run: |
           docker compose build
           docker image ls
+    - name: Push to Registry
+      run: |
           docker tag $(docker images uwpath_backend --format "{{.ID}}") uwpathdocker/uwpath_backend:int
           docker push uwpathdocker/uwpath_backend:int
+    - name: Clean Env
+      run: docker system prune --volumes -af
+      run: docker logout 
     
