@@ -6,13 +6,10 @@ jobs:
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
-    - run: pwd
-    - name: Create SSH Key
+    - name: Prepare Env
+      run : docker rmi $(docker images -a -q)
+    - name: Build Image
       run: |
-        install -m 600 -D /dev/null ~/.ssh/id_rsa
-        echo ${{ secrets.UWPATH_PRIVATE_KEY }} > ~/.ssh/id_rsa
-        ssh-keyscan -H 129.153.61.57 > ~/.ssh/known_hosts
-    - name: SSH Into Parallel Server
-      run: ssh ubuntu@${{ secrets.UWPATH_IP }}
-    - run: ls
+          docker compose build
+          docker image ls
     
