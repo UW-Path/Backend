@@ -7,7 +7,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Docker Login
-      run: docker login --username ${{ secrets.UWPATH_DOCKER_USER }} --password ${{ secrets.UWPATH_DOCKER_PASSWORD }}
+      shell: bash
+      env:
+        DOCKER_USERNAME: ${{ secrets.UWPATH_DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.UWPATH_DOCKER_PASSWORD }}
+      run: docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
     - name: Build Image
       run: |
           docker compose build
