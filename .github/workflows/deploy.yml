@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - int
+      - pipeline-setup
       
 jobs:
   deploy:
