@@ -5,10 +5,6 @@ services:
     image: uwpath_backend
     container_name: uwpath_backend
     build: .
-    command: bash -c "
-      python manage.py migrate
-      && python manage.py runserver 0.0.0.0:8000
-      "
     volumes:
       - ./Wallet_uwpathparallel:/code/Wallet_uwpathparallel
     ports:
