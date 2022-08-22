@@ -9,3 +9,6 @@ jobs:
       - uses: actions/checkout@v3
       - name: Docker Build
         run: docker compose build
+      - name: Clean Env
+        if: always()
+        run: docker system prune --volumes -af
