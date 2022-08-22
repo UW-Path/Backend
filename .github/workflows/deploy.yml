@@ -1,10 +1,8 @@
-name: remote ssh command
+name: int_deploy
 on:
   push:
     branches:
-      - master
       - int
-      - pipeline-setup
       
 jobs:
   deploy:
