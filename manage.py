@@ -9,6 +9,8 @@ def main():
     logging.error(os.listdir('/code/Wallet_uwpathparallel'))
     with open('/code/Wallet_uwpathparallel/tnsnames.ora', 'r') as f:
         print(f.read())
+    with open('/code/Wallet_uwpathparallel/sqlnet.ora', 'r') as f:
+        print(f.read())
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'uwpath_backend.settings')
     try:
         from django.core.management import execute_from_command_line
