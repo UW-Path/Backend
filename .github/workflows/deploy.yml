@@ -1,8 +1,32 @@
-name: deploy
-on: [push]
+name: int_deploy
+on:
+  push:
+    branches:
+      - int
+      
 jobs:
-  check-bats-version:
-    runs-on: ubuntu-latest
+  deploy:
+    name: deploy
+    runs-on: [self-hosted, parallel]
     steps:
-      - run: ssh ubuntu@${{secrets.UWPATH_IP}} --i ${{secrets.UWPATH_PRIVATE_KEY}}
-      - run: echo "success"
+    - uses: actions/checkout@v3
+    - name: Docker Login
+      shell: bash
+      env:
+        DOCKER_USERNAME: ${{ secrets.UWPATH_DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.UWPATH_DOCKER_PASSWORD }}
+      run: docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
+    - name: Build Image
+      run: |
+          docker compose build
+          docker image ls
+    - name: Push to Registry
+      run: |
+          docker tag $(docker images uwpath_backend --format "{{.ID}}") uwpathdocker/uwpath_backend:int
+          docker push uwpathdocker/uwpath_backend:int
+    - name: Clean Env
+      if: always()
+      run: |
+        docker system prune --volumes -af
+        docker logout 
+    
