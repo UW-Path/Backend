@@ -11,6 +11,7 @@ def main():
         print(f.read())
     with open('/code/Wallet_uwpathparallel/sqlnet.ora', 'r') as f:
         print(f.read())
+    print(os.getenv("TNS_ADMIN"))
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'uwpath_backend.settings')
     try:
         from django.core.management import execute_from_command_line
