@@ -1,3 +1,4 @@
+echo 'Starting backend'
 if [ "$GCP" = 'true' ]
 then
     echo 'Copying wallet'
