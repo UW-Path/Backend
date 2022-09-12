@@ -25,5 +25,6 @@ RUN pip install psycopg2-binary==2.8.6
 RUN pip install -r requirements.txt
 COPY . /code/
 ENV PATH /code/:$PATH
-CMD python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+RUN chmod 100 start.sh
+CMD ./start.sh
 EXPOSE 8000
