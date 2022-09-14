@@ -27,7 +27,7 @@ jobs:
       - name: Push to Container Registry
         env:
           IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME_DEV }}
-        run: sudo -u $USER docker push gcr.io/example/example:latest
+        run: sudo -u $USER docker push "$IMAGE_NAME"
       - name: Deploy to Cloud Run
         uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
