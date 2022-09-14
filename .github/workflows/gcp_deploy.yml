@@ -21,7 +21,7 @@ jobs:
         env:
           SERVICE_CREDENTIALS: ${{ secrets.GCP_SERVICE_CREDENTIALS_DEV }}
         run: |-
-          docker login -u _json_key -p "$SERVICE_CREDENTIALS" https://gcr.io
+          echo "$SERVICE_CREDENTIALS" | docker login -u _json_key --password-stdin https://gcr.io
       - name: Docker Build
         env:
           IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME_DEV }}
