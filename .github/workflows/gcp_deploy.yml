@@ -10,7 +10,6 @@ jobs:
     name: gcp_deploy
     runs-on: ubuntu-latest
     steps:
-      steps:
       - name: G-Cloud Authenticate
         uses: 'google-github-actions/auth@v0'
         with: 
