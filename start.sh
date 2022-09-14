@@ -1,5 +1,5 @@
 echo 'Starting backend'
-if [ "$GCP" = 'true' ]
+if [ ! -z $UWPATH_ENVIRONMENT ]
 then
     echo 'Copying wallet'
     mkdir -p /code/Wallet_uwpathparallel
