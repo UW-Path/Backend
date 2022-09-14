@@ -1,4 +1,4 @@
-name: gcp_deploy
+name: gcp_deploy_backend_dev
 on:
   push:
     branches:
@@ -6,8 +6,8 @@ on:
       - pipline-setup
 
 jobs:
-  gcp_deploy:
-    name: gcp_deploy
+  deploy:
+    name: deploy
     runs-on: ubuntu-latest
     steps:
       - name: G-Cloud Authenticate
