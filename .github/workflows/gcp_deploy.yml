@@ -15,6 +15,7 @@ jobs:
         id: gcloud_auth
         uses: 'google-github-actions/auth@v0'
         with: 
+          token_format: access_token
           credentials_json: ${{ secrets.GCP_SERVICE_CREDENTIALS_DEV }}
       - name: G-Cloud Docker Login
         uses: 'docker/login-action@v1'
