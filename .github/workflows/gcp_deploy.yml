@@ -13,7 +13,7 @@ jobs:
       - name: G-Cloud Authenticate
         uses: 'google-github-actions/auth@v0'
         with: 
-          credentials-json: ${{ secrets.GCP_SERVICE_CREDENTIALS_DEV }}
+          credentials_json: ${{ secrets.GCP_SERVICE_CREDENTIALS_DEV }}
       - uses: actions/checkout@v3
       - name: Docker Build
         env:
