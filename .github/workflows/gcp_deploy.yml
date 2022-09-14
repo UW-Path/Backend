@@ -18,11 +18,8 @@ jobs:
           token_format: access_token
           credentials_json: ${{ secrets.GCP_SERVICE_CREDENTIALS_DEV }}
       - name: G-Cloud Docker Login
-        uses: 'docker/login-action@v1'
-        with:
-          registry: 'gcr.io'
-          username: 'oauth2accesstoken'
-          password: '${{ steps.gcloud_auth.outputs.access_token }}'
+        run: |-
+          echo '${{ steps.gcloud_auth.outputs.access_token }}' | docker login -u oauth2accesstoken --password-stdin https://gcr.io
       - name: Docker Build
         env:
           IMAGE_NAME: ${{ secrets.GCP_IMAGE_NAME_DEV }}
