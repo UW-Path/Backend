@@ -21,7 +21,7 @@ jobs:
         env:
           SERVICE_CREDENTIALS: ${{ secrets.GCP_SERVICE_CREDENTIALS_DEV }}
         run: |-
-          gcloud auth configure-docker gcr.io
+          gcloud auth configure-docker gcr.io --quiet
           gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io
       - name: Docker Build
         env:
