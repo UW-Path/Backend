@@ -2,7 +2,6 @@ name: int_deploy
 on:
   push:
     branches:
-      - int
       - dev
       
 jobs:
