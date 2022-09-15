@@ -26,7 +26,7 @@ SECRET_KEY = '7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'backend', 'uwpath-backend-dev-ukfyn57uga-uc.a.run.app']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'backend', 'api.dev.uwpath.com']
 
 
 # Application definition

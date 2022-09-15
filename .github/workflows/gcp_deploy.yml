@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - int
+      - dev
       - pipeline-setup
 
 jobs:
