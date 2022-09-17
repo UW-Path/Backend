@@ -5,8 +5,8 @@ services:
     container_name: uwpath_backend
     build: .
     command: bash -c "
-      python manage.py migrate
-      && python manage.py runserver 0.0.0.0:8000
+      python manage.py migrate &&    
+      gunicorn uwpath_backend.wsgi --bind 0.0.0.0:$PORT
       "
     # volumes:
     #   - ./Wallet_uwpathparallel:/code/Wallet_uwpathparallel
@@ -16,11 +16,10 @@ services:
       - uwpath_db_network
       - uwpath_backend_network
     environment:
+      - DB_HOST=db
+      - SECRET_KEY=7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk
+      - DJANGO_ENV=prod
       - UWPATH_ENVIRONMENT=docker
-    #  - SECRET_KEY=7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk
-    #  - DJANGO_SETTINGS_MODULE=uwpath_backend.dev
-    #   - TNS_ADMIN=/code/Wallet_uwpathparallel
-
 networks:
   uwpath_db_network:
     external: true

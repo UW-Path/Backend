@@ -1,7 +1,7 @@
 FROM python:3.7
 
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE uwpath_backend.settings
+ENV DJANGO_SETTINGS_MODULE uwpath_backend.local
 WORKDIR /opt/oracle
 RUN apt-get update && \
     apt-get install -y libaio1 unzip wget
@@ -15,7 +15,6 @@ RUN wget https://download.oracle.com/otn_software/linux/instantclient/instantcli
 RUN mkdir /code
 WORKDIR /code
 COPY requirements.txt /code/
-RUN pip install psycopg2-binary==2.8.6
 RUN pip install -r requirements.txt
 COPY . /code/
 ENV PATH /code/:$PATH
