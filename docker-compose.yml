@@ -16,8 +16,8 @@ services:
       - DB_PASS=password
       - DB_HOST=uwpath_oracle_db
       - DB_PORT=1521
-    #  - SECRET_KEY=7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk
-    #  - DJANGO_SETTINGS_MODULE=uwpath_backend.dev
+      - PORT=8000
+      - SECRET_KEY=7ldnlu_gz*&vx&=4)q3#74ih@nzx*owgeu^=*katjqpbb-s1sk
 
 networks:
   uwpath_db_network:
