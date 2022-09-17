@@ -13,8 +13,25 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+
+# HTTPS Settings
+#SESSION_COOKIE_SECURE = True 
+#CSRF_COOKIE_SECURE = True
+#SECURE_SSL_REDIRECT = True 
+
+# HSTS Settings
+#SECURE_HSTS_SECONDS = 31536000 # 1 year
+#SECURE_HSTS_PRELOAD = True
+#SECURE_HSTS_INCLUDE_SUBDOMAINS = True 
+
+
+#STATIC_URL = '/static/'
+#STATIC_ROOT = '/code/static/'
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,9 +41,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("SECRET_KEY") 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'backend']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', 'localhost', 'backend', 'parallel.uwpath.com']
 
 
 # Application definition
@@ -128,9 +145,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+
 STATICFILES_DIRS = [
     'app/static/',
 ]
+
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 # Note for emails to work please set up env variables. Note: You might need to restart your computer
 
@@ -157,4 +178,6 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
     'http://127.0.0.1:8000',
     'http://0.0.0.0:8000',
+    'http://129.153.61.57',
+    'http://parallel.uwpath.com',
 ]

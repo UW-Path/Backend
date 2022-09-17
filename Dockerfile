@@ -1,7 +1,7 @@
 FROM python:3.7
 
 ENV PYTHONUNBUFFERED 1
-ENV DJANGO_SETTINGS_MODULE uwpath_backend.dev
+ENV DJANGO_SETTINGS_MODULE uwpath_backend.local
 WORKDIR /opt/oracle
 RUN apt-get update && \
     apt-get install -y libaio1 unzip wget
