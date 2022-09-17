@@ -7,6 +7,9 @@ then
     echo $WALLET_EWALLET_PEM > /code/Wallet_uwpathparallel/ewallet.pem
     echo $WALLET_TNSNAMES_ORA > /code/Wallet_uwpathparallel/tnsnames.ora
     echo $WALLET_SQLNET_ORA > /code/Wallet_uwpathparallel/sqlnet.ora
+    python manage.py migrate   
+    gunicorn uwpath_backend.wsgi --bind 0.0.0.0:$PORT
+else
+    python manage.py migrate
+    python manage.py runserver 0.0.0.0:$PORT
 fi
-python manage.py migrate
-python manage.py runserver 0.0.0.0:8000
