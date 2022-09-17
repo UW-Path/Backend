@@ -10,10 +10,12 @@ from app.models import ContactForm, UwpathApp
 from app.serializer import AppSerializer
 from app.views.communication_view import Communications_List
 from app.views.requirement_view import Requirements_List
-from uwpath_backend import settings
 from django.db.models import Q
 from django.core import serializers
 
+import os
+
+settings = __import__(os.getenv('DJANGO_SETTINGS_MODULE'))
 
 
 '''

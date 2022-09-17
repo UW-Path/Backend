@@ -3,8 +3,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from uwpath_backend import settings
 
+import os
+
+settings = __import__(os.getenv('DJANGO_SETTINGS_MODULE'))
 
 
 class email_API(APIView):

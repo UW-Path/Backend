@@ -13,9 +13,11 @@ from datetime import datetime
 
 from django.core.mail import EmailMessage
 
-from uwpath_backend import settings
-
 import re
+
+import os
+
+settings = __import__(os.getenv('DJANGO_SETTINGS_MODULE'))
 
 
 def get_char(i):
