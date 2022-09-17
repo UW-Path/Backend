@@ -101,7 +101,7 @@ class CourseInfo(models.Model):
     credit = models.CharField(max_length=255, blank=True, null=True)
     info = models.CharField(max_length=2000, blank=True, null=True)
     offering = models.CharField(max_length=255, blank=True, null=True)
-    online = models.BooleanField(blank=True, null=True)
+    is_online = models.BooleanField(blank=True, null=True)
     prereqs = models.CharField(max_length=500, blank=True, null=True)
     coreqs = models.CharField(max_length=500, blank=True, null=True)
     antireqs = models.CharField(max_length=500, blank=True, null=True)
