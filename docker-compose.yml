@@ -6,7 +6,7 @@ services:
     build: .
     command: bash -c "
       python manage.py migrate &&    
-      gunicorn uwpath_backend.wsgi --bind 0.0.0.0:8000 
+      gunicorn uwpath_backend.wsgi --bind 0.0.0.0:$PORT
       "
     # volumes:
     #   - ./Wallet_uwpathparallel:/code/Wallet_uwpathparallel

@@ -98,12 +98,12 @@ WSGI_APPLICATION = 'uwpath_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres' if os.getenv("DB_NAME") is None else os.getenv("DB_NAME"),
-        'USER': 'postgres' if os.getenv("DB_USER") is None else os.getenv("DB_USER"),
-        'PASSWORD': '1234' if os.getenv("DB_PASS") is None else os.getenv("DB_PASS"),
-        'HOST': 'db' if os.getenv("DB_HOST") is None else os.getenv("DB_HOST"),
-        'PORT': '5432' if os.getenv("DB_PORT") is None else os.getenv("DB_PORT"),
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': os.getenv("ORACLE_DSN"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASS"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT")
     }
 }
 
