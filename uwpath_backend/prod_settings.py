@@ -173,4 +173,5 @@ CORS_ORIGIN_ALLOW_ALL=True
 
 CORS_ORIGIN_WHITELIST = [
     'https://uwpath.com',
+    'https://uwpath-frontend-prod-qtsbtvgvna-uc.a.run.app'
 ]
