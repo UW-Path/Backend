@@ -2,7 +2,7 @@ name: gcp_deploy_backend_prod
 on:
   push:
     branches:
-      - pipeline-setup-prod
+      - master
 
 jobs:
   deploy:
@@ -13,7 +13,7 @@ jobs:
       - name: G-Cloud Authenticate
         env:
           SERVICE_CREDENTIALS: ${{ secrets.GCP_SERVICE_CREDENTIALS_PROD }}
-          SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT_PROD}}
+          SERVICE_ACCOUNT: ${{ secrets.GCP_SERVICE_ACCOUNT_PROD }}
           PROJECT_ID: ${{ secrets.GCP_PROJECT_ID_PROD }}
         run: |-
           echo "$SERVICE_CREDENTIALS" > ./credentials.json
