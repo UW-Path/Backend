@@ -10,6 +10,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+UWPATH_CATALOG_ROOT = os.getenv("UWPATH_CATALOG_ROOT")
+UWPATH_ACTIVE_ACADEMIC_YEAR = os.getenv("UWPATH_ACTIVE_ACADEMIC_YEAR")
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

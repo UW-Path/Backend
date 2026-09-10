@@ -13,20 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path, re_path
 from django.contrib import admin
+from django.urls import path, re_path
 
 import app.view as uwPath
-import app.views.course_view as course_view
-import app.views.prereq_view as prereq_view
 import app.views.antireq_view as antireq_view
 import app.views.breath_view as breath_view
+import app.views.catalog_view as catalog_view
+import app.views.communication_view as communication_view
+import app.views.course_view as course_view
+import app.views.email_view as email_view
+import app.views.prereq_view as prereq_view
 import app.views.requirement_view as requirement_view
 import app.views.validation_view as validation_view
-import app.views.communication_view as communication_view
-import app.views.validation_view as validation_view
-import app.views.email_view as email_view
-
 
 urlpatterns = [
     path('', uwPath.index, name='index'),
@@ -52,6 +51,16 @@ urlpatterns = [
     path('api/communications/', communication_view.Communications_List.as_view()),
     path('api/communications/get/', communication_view.Communications_API.as_view()),
     path('api/send_email/', email_view.email_API.as_view()),
+    path('api/catalogs/', catalog_view.CatalogList.as_view()),
+    path('api/catalogs/<str:academic_year>/', catalog_view.CatalogDetail.as_view()),
+    path(
+        'api/catalogs/<str:academic_year>/courses/',
+        catalog_view.CatalogCourses.as_view(),
+    ),
+    path(
+        'api/catalogs/<str:academic_year>/programs/',
+        catalog_view.CatalogPrograms.as_view(),
+    ),
 
 
     path(r'contact', uwPath.contact, name='contact'),

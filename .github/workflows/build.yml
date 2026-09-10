@@ -2,6 +2,18 @@ name: build
 on: pull_request
 
 jobs:
+  catalog-tests:
+    name: catalog tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+
   build:
     name: build
     runs-on: ubuntu-latest
