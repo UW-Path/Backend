@@ -1,0 +1,7 @@
+.context/
+.git
+.github/
+.ruff_cache/
+**/__pycache__/
+**/*.py[cod]
+Wallet_uwpathparallel/
