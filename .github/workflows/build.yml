@@ -4,11 +4,9 @@ on: pull_request
 jobs:
   build:
     name: build
-    runs-on: [self-hosted, parallel]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Docker Build
         run: docker compose build
-      - name: Clean Env
-        if: always()
-        run: docker system prune --volumes -af
