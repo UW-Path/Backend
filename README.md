@@ -14,7 +14,8 @@ pipeline. Set `UWPATH_CATALOG_ROOT` to the directory containing academic-year
 subdirectories such as `2026-2027/`. Optionally set
 `UWPATH_ACTIVE_ACADEMIC_YEAR`; otherwise `active` resolves to the latest year.
 
-The additive API does not change the existing database-backed endpoints:
+The additive API does not change the existing database-backed endpoints when
+no catalog root is configured:
 
 - `GET /api/catalogs/`
 - `GET /api/catalogs/active/`
@@ -40,9 +41,12 @@ UWPATH_ACTIVE_ACADEMIC_YEAR=2026-2027 \
   --noreload --settings=uwpath_backend.catalog_settings
 ```
 
-Then open <http://127.0.0.1:8000/api/catalogs/>. The catalog routes work without
-Oracle; the legacy requirements, validation, and export routes still require the
-legacy database.
+Then open <http://127.0.0.1:8000/api/catalogs/>. When a catalog root is set, the
+legacy program, requirement, and course-info routes also read these files so the
+existing frontend can run without Oracle. Structured course requirements are
+translated conservatively; rules the legacy planner cannot represent are
+reported in the response's `compatibility_warnings`. Prerequisite validation
+still requires the legacy database.
 
 In a Conductor workspace, link or copy catalogs to `.context/catalogs`, then use
 the `catalog-api` run command. It binds to that workspace's allocated port.
