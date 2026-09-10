@@ -1,14 +1,31 @@
+from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app.catalog_compatibility import (
+    ProgramNotFound,
+    filter_courses,
+    find_course,
+    load_snapshot,
+)
+from app.catalog_repository import CatalogError
 from app.models import CourseInfo
 from app.serializer import CourseInfoSerializer
+from app.views.catalog_view import configured_repository, error_response
 
 
 class Course_Info_API(APIView):
     def get(self, request, format=None):
+        if _catalog_configured():
+            try:
+                return Response(find_course(_active_snapshot(), request.GET['pk']))
+            except CatalogError as error:
+                return error_response(error)
+            except (KeyError, ProgramNotFound):
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
         try:
             pk = str(request.GET['pk'])
             app = CourseInfo.objects.get(pk=pk)
@@ -26,6 +43,21 @@ class Course_Info_API(APIView):
 
     @api_view(('GET',))
     def filter(request):
+        if _catalog_configured():
+            try:
+                return Response(
+                    filter_courses(
+                        _active_snapshot(),
+                        int(request.GET['start']),
+                        int(request.GET['end']),
+                        request.GET['code'],
+                    )
+                )
+            except CatalogError as error:
+                return error_response(error)
+            except (KeyError, TypeError, ValueError):
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
         try:
             start = int(request.GET['start'])
             end = int(request.GET['end'])
@@ -76,6 +108,24 @@ class Course_Info_API(APIView):
 
 class Course_Info_List(APIView):
     def get(self, request, format=None):
+        if _catalog_configured():
+            try:
+                return Response(filter_courses(_active_snapshot(), 0, 1000, 'none')[:10])
+            except CatalogError as error:
+                return error_response(error)
+
         list = CourseInfo.objects.all()[:10]
         serializer = CourseInfoSerializer(list, many=True)
         return Response(serializer.data)
+
+
+def _catalog_configured():
+    return bool(getattr(settings, 'UWPATH_CATALOG_ROOT', None))
+
+
+def _active_snapshot():
+    return load_snapshot(
+        configured_repository(),
+        'active',
+        getattr(settings, 'UWPATH_ACTIVE_ACADEMIC_YEAR', None),
+    )

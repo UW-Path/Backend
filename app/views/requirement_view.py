@@ -1,18 +1,26 @@
+import csv
+import io
+
+from django.conf import settings
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-import io
-import csv
-
+from app.catalog_compatibility import (
+    ProgramNotFound,
+    available_program_years,
+    load_snapshot,
+    major_summaries,
+    requirements_payload,
+)
+from app.catalog_repository import CatalogError
 from app.models import Requirements
 from app.serializer import RequirementsSerializer
+from app.views.catalog_view import configured_repository, error_response
 from app.views.communication_view import Communications_List
-
-from django.http import HttpResponse
 
 
 class Requirements_API(APIView):
@@ -34,6 +42,27 @@ class Requirements_API(APIView):
 
     @api_view(('GET',))
     def requirements(request):
+        if _catalog_configured():
+            try:
+                repository = configured_repository()
+                snapshot = load_snapshot(
+                    repository,
+                    request.GET.get('calendar_year') or 'active',
+                    getattr(settings, 'UWPATH_ACTIVE_ACADEMIC_YEAR', None),
+                )
+                minors = request.GET.get('minors', '').split(',')
+                data = requirements_payload(
+                    snapshot,
+                    request.GET.get('major', ''),
+                    minors,
+                    request.GET.get('option', ''),
+                )
+                return JsonResponse(data)
+            except CatalogError as error:
+                return error_response(error)
+            except ProgramNotFound as error:
+                return HttpResponseNotFound(str(error))
+
         # Note option includes requirement
         try:
             calendar_year = str(request.GET['calendar_year'])
@@ -220,12 +249,33 @@ class Requirements_List(APIView):
 
     @api_view(('GET',))
     def get_unique_major(self, format=None):
+        if _catalog_configured():
+            try:
+                repository = configured_repository()
+                snapshot = load_snapshot(
+                    repository,
+                    'active',
+                    getattr(settings, 'UWPATH_ACTIVE_ACADEMIC_YEAR', None),
+                )
+                return JsonResponse({'Major': major_summaries(snapshot)})
+            except CatalogError as error:
+                return error_response(error)
+
         # This code is fine as it fetches all distinct programs (regardless of years)
         querySet = Requirements.objects.values('program_name', 'plan_type', 'major_name', 'link', 'year').filter(plan_type="Major").order_by('program_name').distinct()
         return JsonResponse({'Major': list(querySet)})
 
     @api_view(('GET',))
     def get_available_year_for_program(request, format=None):
+        if _catalog_configured():
+            try:
+                years = available_program_years(
+                    configured_repository(), request.GET.get('major', '')
+                )
+                return JsonResponse({'years': years})
+            except CatalogError as error:
+                return error_response(error)
+
         major = str(request.GET['major'])
 
         # This code is fine as it fetches all distinct programs (regardless of years)
@@ -244,3 +294,7 @@ class Requirements_List(APIView):
     def get_minor_requirement(self, minor, year):
         querySet = Requirements.objects.values().filter(program_name=minor, year=year).order_by('program_name')
         return querySet
+
+
+def _catalog_configured():
+    return bool(getattr(settings, 'UWPATH_CATALOG_ROOT', None))
