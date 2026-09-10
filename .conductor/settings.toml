@@ -1,0 +1,15 @@
+"$schema" = "https://conductor.build/schemas/settings.repo.schema.json"
+
+[scripts]
+setup = "python3 -m venv .context/backend-venv && .context/backend-venv/bin/pip install -r requirements.txt"
+run_mode = "concurrent"
+
+[scripts.run.catalog-api]
+available_in = [ "local" ]
+command = "test -d \"${UWPATH_CATALOG_ROOT:-.context/catalogs}\" && UWPATH_CATALOG_ROOT=\"${UWPATH_CATALOG_ROOT:-.context/catalogs}\" UWPATH_ACTIVE_ACADEMIC_YEAR=\"${UWPATH_ACTIVE_ACADEMIC_YEAR:-2026-2027}\" .context/backend-venv/bin/python manage.py runserver 127.0.0.1:$CONDUCTOR_PORT --noreload --settings=uwpath_backend.catalog_settings"
+default = true
+icon = "server"
+
+[scripts.run.test]
+command = "DJANGO_SETTINGS_MODULE=uwpath_backend.test_settings .context/backend-venv/bin/python -m unittest discover -s tests -v"
+icon = "test-tube"
