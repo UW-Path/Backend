@@ -46,7 +46,9 @@ legacy program, requirement, and course-info routes also read these files so the
 existing frontend can run without Oracle. Structured course requirements are
 translated conservatively; rules the legacy planner cannot represent are
 reported in the response's `compatibility_warnings`. Prerequisite validation
-still requires the legacy database.
+evaluates structured course membership, including same-term corequisites and
+antirequisites. Prose-only rules require a manual override; grades and other
+student-specific eligibility are outside the legacy planner's model.
 
 In a Conductor workspace, link or copy catalogs to `.context/catalogs`, then use
 the `catalog-api` run command. It binds to that workspace's allocated port.
