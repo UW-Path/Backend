@@ -72,6 +72,14 @@ def available_program_years(
     return years
 
 
+def find_catalog_program(
+    snapshot: CatalogSnapshot, program_name: str
+) -> Mapping[str, Any]:
+    program = _find_program(snapshot, program_name)
+    assert program is not None
+    return program
+
+
 def requirements_payload(
     snapshot: CatalogSnapshot,
     major_name: str,
@@ -139,13 +147,19 @@ def legacy_course(course: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def find_course(snapshot: CatalogSnapshot, course_code: str) -> dict[str, Any]:
+    return legacy_course(find_catalog_course(snapshot, course_code))
+
+
+def find_catalog_course(
+    snapshot: CatalogSnapshot, course_code: str
+) -> Mapping[str, Any]:
     normalized_code = _normalize_course_code(course_code)
     for course in snapshot.courses:
         if (
             _normalize_course_code(str(course.get("course_code") or ""))
             == normalized_code
         ):
-            return legacy_course(course)
+            return course
     raise ProgramNotFound(f"Course {course_code} is not available")
 
 

@@ -1,17 +1,44 @@
+from django.conf import settings
 from django.http import HttpResponseNotFound
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from API.ValidationCheckAPI import ValidationCheckAPI
+from app.catalog_compatibility import ProgramNotFound, load_snapshot
+from app.catalog_repository import CatalogError
+from app.catalog_validation import validate_course_selection
 from app.models import CourseInfo
 from app.views.antireq_view import Antireqs_API
+from app.views.catalog_view import configured_repository, error_response
 from app.views.course_view import Course_Info_API
 from app.views.prereq_view import Prereqs_API
 
 
 class UWPath_API(APIView):
     def get(self, request, format=None):
+        if getattr(settings, 'UWPATH_CATALOG_ROOT', None):
+            try:
+                snapshot = load_snapshot(
+                    configured_repository(),
+                    'active',
+                    getattr(settings, 'UWPATH_ACTIVE_ACADEMIC_YEAR', None),
+                )
+                return Response(
+                    validate_course_selection(
+                        snapshot,
+                        request.GET['pk'],
+                        request.GET.getlist('list_of_courses_taken[]'),
+                        request.GET.getlist('current_term_courses[]'),
+                        request.GET.getlist('programs[]'),
+                        request.GET.get('academic_level'),
+                    )
+                )
+            except CatalogError as error:
+                return error_response(error)
+            except (KeyError, ProgramNotFound):
+                return Response(status=status.HTTP_404_NOT_FOUND)
+
         try:
             pk = str(request.GET['pk'])
 
