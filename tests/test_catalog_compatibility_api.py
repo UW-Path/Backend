@@ -417,6 +417,13 @@ class CatalogCompatibilityAPITests(unittest.TestCase):
         self.assertEqual(detail.json()["course_name"], "Tools and Techniques")
         self.assertEqual(detail.json()["credit"], "0.25")
         self.assertEqual(
+            detail.json()["prerequisite_rule"],
+            self.courses[2]["prerequisite_rule"],
+        )
+        self.assertEqual(
+            detail.json()["corequisite_rule"], self.courses[2]["corequisite_rule"]
+        )
+        self.assertEqual(
             [item["course_code"] for item in math.json()],
             [
                 "CS 135",

@@ -142,6 +142,9 @@ def legacy_course(course: Mapping[str, Any]) -> dict[str, Any]:
         "prereqs": ",".join(_course_codes(course.get("prerequisite_rule"))),
         "coreqs": ",".join(_course_codes(course.get("corequisite_rule"))),
         "antireqs": ",".join(_course_codes(course.get("antirequisite_rule"))),
+        "prerequisite_rule": course.get("prerequisite_rule"),
+        "corequisite_rule": course.get("corequisite_rule"),
+        "antirequisite_rule": course.get("antirequisite_rule"),
         "link": str(course.get("source_url") or ""),
     }
 
